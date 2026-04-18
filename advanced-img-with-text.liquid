@@ -1,0 +1,1027 @@
+{% comment %}
+  Onda Provisions – Chef Story Section
+  Compatible with: Serenity Theme
+  Section file: sections/onda-chef-story.liquid
+{% endcomment %}
+
+<style>
+  .onda-story-{{ section.id }} *,
+  .onda-story-{{ section.id }} *::before,
+  .onda-story-{{ section.id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  .onda-story-{{ section.id }} {
+    --op-teal:        {{ section.settings.color_teal }};
+    --op-orange:      {{ section.settings.color_accent }};
+    --op-beige:       {{ section.settings.color_beige }};
+    --op-cream:       {{ section.settings.color_cream }};
+    --op-dark:        {{ section.settings.color_dark }};
+    --op-body-font:   {{ section.settings.font_size_body }}px;
+    --op-max-width:   {{ section.settings.section_max_width }}px;
+    --op-btn-bg:      {{ section.settings.button_color }};
+    --op-btn-text:    {{ section.settings.button_text_color }};
+    --op-btn-size:    {{ section.settings.button_font_size }}px;
+    --op-heading-color: {{ section.settings.heading_color }};
+    --op-body-color:  {{ section.settings.body_text_color }};
+    --op-label-color: {{ section.settings.label_color }};
+    --op-quote-color: {{ section.settings.quote_text_color }};
+    --op-stat-num-size: {{ section.settings.stat_number_size }}px;
+    --op-title-size:  {{ section.settings.title_font_size }}px;
+
+    background: var(--op-dark);
+    width: 100%;
+  }
+
+  .onda-story-{{ section.id }} .op-inner {
+    max-width: var(--op-max-width);
+    margin: 0 auto;
+    min-height: {{ section.settings.section_min_height }}px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  /* ── LEFT: VISUAL ── */
+  .onda-story-{{ section.id }} .op-visual {
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+  }
+
+  .onda-story-{{ section.id }} .op-visual::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: 4px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--op-teal) 30%,
+      var(--op-orange) 70%,
+      transparent
+    );
+    z-index: 3;
+  }
+
+  .onda-story-{{ section.id }} .op-img-main {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness({{ section.settings.image_brightness | divided_by: 100.0 }}) saturate({{ section.settings.image_saturation | divided_by: 100.0 }});
+  }
+
+  .onda-story-{{ section.id }} .op-img-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(3,103,116,0.25) 0%, transparent 60%),
+      linear-gradient(to right, transparent 60%, rgba(26,26,24,0.7) 100%);
+  }
+
+  /* ── STAT CARDS ── */
+  .onda-story-{{ section.id }} .op-stat {
+    position: absolute;
+    z-index: 4;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 1.2rem 1.5rem;
+  }
+
+  .onda-story-{{ section.id }} .op-stat--1 {
+    bottom: 3.5rem;
+    left: 2rem;
+    background: rgba(3,103,116,0.75);
+  }
+
+  .onda-story-{{ section.id }} .op-stat--2 {
+    top: 3rem;
+    right: 2.5rem;
+    background: rgba(26,26,24,0.82);
+    border-color: rgba(198,195,184,0.18);
+  }
+
+  .onda-story-{{ section.id }} .op-stat__number {
+    font-size: var(--op-stat-num-size);
+    font-weight: 300;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .onda-story-{{ section.id }} .op-stat__label {
+    font-size: {{ section.settings.stat_label_size }}px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--op-beige);
+    margin-top: 0.25rem;
+  }
+
+  /* ── ROTATING BADGE ── */
+  .onda-story-{{ section.id }} .op-badge {
+    position: absolute;
+    z-index: 4;
+    bottom: 3.5rem;
+    right: 2rem;
+    width: {{ section.settings.badge_size }}px;
+    height: {{ section.settings.badge_size }}px;
+    border-radius: 50%;
+    background: var(--op-orange);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem;
+    animation: op-spin-{{ section.id }} 20s linear infinite;
+  }
+
+  @keyframes op-spin-{{ section.id }} {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .onda-story-{{ section.id }} .op-badge-text {
+    font-size: {{ section.settings.badge_font_size }}px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* ── RIGHT: CONTENT ── */
+  .onda-story-{{ section.id }} .op-content {
+    padding: {{ section.settings.content_padding_v }}px {{ section.settings.content_padding_h }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .onda-story-{{ section.id }} .op-content::before {
+    content: '{{ section.settings.watermark_text }}';
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+    font-size: {{ section.settings.watermark_size }}px;
+    font-weight: 300;
+    color: rgba(198,195,184,0.04);
+    letter-spacing: 0.3em;
+    pointer-events: none;
+  }
+
+  .onda-story-{{ section.id }} .op-label {
+    font-size: {{ section.settings.label_font_size }}px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--op-label-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .onda-story-{{ section.id }} .op-label::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--op-label-color);
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .onda-story-{{ section.id }} .op-title {
+    font-size: var(--op-title-size);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--op-heading-color);
+    margin-bottom: 2rem;
+  }
+
+  .onda-story-{{ section.id }} .op-title em {
+    font-style: italic;
+    color: var(--op-beige);
+  }
+
+  .onda-story-{{ section.id }} .op-body {
+    font-size: var(--op-body-font);
+    line-height: 1.8;
+    color: var(--op-body-color);
+    font-weight: 300;
+    max-width: {{ section.settings.body_max_width }}ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .onda-story-{{ section.id }} .op-body strong {
+    color: rgba(255,255,255,0.9);
+    font-weight: 400;
+  }
+
+  /* ── PULL QUOTE ── */
+  .onda-story-{{ section.id }} .op-quote {
+    margin: 2.5rem 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--op-teal);
+  }
+
+  .onda-story-{{ section.id }} .op-quote blockquote {
+    font-style: italic;
+    font-size: {{ section.settings.quote_font_size }}px;
+    font-weight: 300;
+    color: var(--op-quote-color);
+    line-height: 1.5;
+  }
+
+  .onda-story-{{ section.id }} .op-quote cite {
+    display: block;
+    margin-top: 0.6rem;
+    font-style: normal;
+    font-size: {{ section.settings.cite_font_size }}px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--op-beige);
+  }
+
+  /* ── VALUES GRID ── */
+  .onda-story-{{ section.id }} .op-values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(198,195,184,0.12);
+  }
+
+  .onda-story-{{ section.id }} .op-value__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .onda-story-{{ section.id }} .op-value:nth-child(1) .op-value__icon {
+   background: rgba(198,195,184,0.1);
+    color: var(--op-beige);
+    border: 1px solid rgba(198,195,184,0.2);
+  }
+
+  .onda-story-{{ section.id }} .op-value:nth-child(2) .op-value__icon {
+    background: rgba(198,195,184,0.1);
+    color: var(--op-beige);
+    border: 1px solid rgba(198,195,184,0.2);
+  }
+
+  .onda-story-{{ section.id }} .op-value:nth-child(3) .op-value__icon {
+    background: rgba(198,195,184,0.1);
+    color: var(--op-beige);
+    border: 1px solid rgba(198,195,184,0.2);
+  }
+
+  .onda-story-{{ section.id }} .op-value__name {
+    font-size: {{ section.settings.value_name_size }}px;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.03em;
+  }
+
+  .onda-story-{{ section.id }} .op-value__desc {
+    font-size: {{ section.settings.value_desc_size }}px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* ── CTA BUTTON ── */
+  .onda-story-{{ section.id }} .op-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--op-btn-text);
+    background: var(--op-btn-bg);
+    font-size: var(--op-btn-size);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    width: fit-content;
+    transition: gap 0.25s, background 0.25s, color 0.25s, border-color 0.25s;
+  }
+
+  {% if section.settings.button_style == 'underline' %}
+  .onda-story-{{ section.id }} .op-cta {
+    background: transparent;
+    color: {{ section.settings.button_text_color }};
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+  }
+  .onda-story-{{ section.id }} .op-cta:hover {
+    gap: 1.25rem;
+    border-color: var(--op-orange);
+    color: var(--op-orange);
+    background: transparent;
+  }
+  {% elsif section.settings.button_style == 'filled' %}
+  .onda-story-{{ section.id }} .op-cta {
+    padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    border: 1px solid transparent;
+  }
+  .onda-story-{{ section.id }} .op-cta:hover {
+    background: transparent;
+    border-color: var(--op-btn-bg);
+    color: var(--op-btn-bg);
+    gap: 1.1rem;
+  }
+  {% elsif section.settings.button_style == 'outlined' %}
+  .onda-story-{{ section.id }} .op-cta {
+    background: transparent;
+    border: 1px solid {{ section.settings.button_color }};
+    color: {{ section.settings.button_color }};
+    padding: {{ section.settings.button_padding_v }}px {{ section.settings.button_padding_h }}px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+  }
+  .onda-story-{{ section.id }} .op-cta:hover {
+    background: var(--op-btn-bg);
+    color: var(--op-btn-text);
+    gap: 1.1rem;
+  }
+  {% endif %}
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .onda-story-{{ section.id }} .op-inner {
+      grid-template-columns: 1fr;
+    }
+    .onda-story-{{ section.id }} .op-visual {
+      min-height: 50vh;
+    }
+    .onda-story-{{ section.id }} .op-content {
+      padding: 3.5rem 6vw;
+    }
+    .onda-story-{{ section.id }} .op-values {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .onda-story-{{ section.id }} .op-values {
+      grid-template-columns: 1fr;
+    }
+    .onda-story-{{ section.id }} .op-title {
+      font-size: {{ section.settings.title_font_size | times: 0.75 | round }}px;
+    }
+  }
+</style>
+
+<section class="onda-story-{{ section.id }}" id="onda-story-{{ section.id }}">
+  <div class="op-inner">
+
+    <!-- LEFT: Visual -->
+    <div class="op-visual">
+      {% if section.settings.main_image != blank %}
+        <img
+          class="op-img-main"
+          src="{{ section.settings.main_image | img_url: '800x' }}"
+          alt="{{ section.settings.main_image.alt | default: section.settings.image_alt }}"
+          loading="lazy"
+          width="800"
+        />
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'op-img-main' }}
+      {% endif %}
+      <div class="op-img-overlay"></div>
+
+      <!-- Stat Card 1 -->
+      {% if section.settings.show_stat_1 %}
+      <div class="op-stat op-stat--1">
+        <div class="op-stat__number">{{ section.settings.stat_1_number }}</div>
+        <div class="op-stat__label">{{ section.settings.stat_1_label }}</div>
+      </div>
+      {% endif %}
+
+      <!-- Stat Card 2 -->
+      {% if section.settings.show_stat_2 %}
+      <div class="op-stat op-stat--2">
+        <div class="op-stat__number">{{ section.settings.stat_2_number }}</div>
+        <div class="op-stat__label">{{ section.settings.stat_2_label }}</div>
+      </div>
+      {% endif %}
+
+      <!-- Rotating Badge -->
+      {% if section.settings.show_badge %}
+      <div class="op-badge">
+        <span class="op-badge-text">{{ section.settings.badge_text }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: Content -->
+    <div class="op-content">
+
+      {% if section.settings.section_label != blank %}
+        <p class="op-label">{{ section.settings.section_label }}</p>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+        <h2 class="op-title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.body_text != blank %}
+        <p class="op-body">{{ section.settings.body_text }}</p>
+      {% endif %}
+
+      {% if section.settings.show_quote and section.settings.quote_text != blank %}
+      <div class="op-quote">
+        <blockquote>{{ section.settings.quote_text }}</blockquote>
+        {% if section.settings.quote_cite != blank %}
+          <cite>— {{ section.settings.quote_cite }}</cite>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Values -->
+      {% if section.settings.show_values %}
+      <div class="op-values">
+
+        {% if section.settings.value_1_name != blank %}
+        <div class="op-value">
+          <div class="op-value__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <p class="op-value__name">{{ section.settings.value_1_name }}</p>
+          <p class="op-value__desc">{{ section.settings.value_1_desc }}</p>
+        </div>
+        {% endif %}
+
+        {% if section.settings.value_2_name != blank %}
+        <div class="op-value">
+          <div class="op-value__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <p class="op-value__name">{{ section.settings.value_2_name }}</p>
+          <p class="op-value__desc">{{ section.settings.value_2_desc }}</p>
+        </div>
+        {% endif %}
+
+        {% if section.settings.value_3_name != blank %}
+        <div class="op-value">
+          <div class="op-value__icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+          </div>
+          <p class="op-value__name">{{ section.settings.value_3_name }}</p>
+          <p class="op-value__desc">{{ section.settings.value_3_desc }}</p>
+        </div>
+        {% endif %}
+
+      </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          href="{{ section.settings.button_url }}"
+          class="button button--outlined none"
+          {% if section.settings.button_new_tab %}target="_blank" rel="noopener"{% endif %}
+        >
+          {{ section.settings.button_label }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Onda Chef Story",
+  "tag": "section",
+  "class": "onda-chef-story-section",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "🎨 Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_dark",
+      "label": "Background Color",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Primary Accent (Teal)",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Secondary Accent (Orange)",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "color_beige",
+      "label": "Muted / Beige",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "color_cream",
+      "label": "Cream",
+      "default": "#f5f3ef"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body Text Color",
+      "default": "#99968f"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label / Eyebrow Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "quote_text_color",
+      "label": "Quote Text Color",
+      "default": "#bfbbaf"
+    },
+
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_max_width",
+      "label": "Section Max Width (px)",
+      "min": 800,
+      "max": 1920,
+      "step": 20,
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_min_height",
+      "label": "Min Section Height (px)",
+      "min": 400,
+      "max": 1200,
+      "step": 10,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "content_padding_v",
+      "label": "Content Padding Vertical (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "content_padding_h",
+      "label": "Content Padding Horizontal (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "body_max_width",
+      "label": "Body Text Max Width (ch)",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "default": 48
+    },
+
+    {
+      "type": "header",
+      "content": "🔤 Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title Font Size (px)",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "font_size_body",
+      "label": "Body Font Size (px)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Label / Eyebrow Font Size (px)",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size",
+      "label": "Quote Font Size (px)",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "default": 21
+    },
+    {
+      "type": "range",
+      "id": "cite_font_size",
+      "label": "Quote Cite Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "value_name_size",
+      "label": "Value Name Font Size (px)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "value_desc_size",
+      "label": "Value Description Font Size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+
+    {
+      "type": "header",
+      "content": "🖼️ Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Background Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image Alt Text",
+      "default": "Chef preparing fresh meals at Onda Provisions kitchen"
+    },
+    {
+      "type": "range",
+      "id": "image_brightness",
+      "label": "Image Brightness (%)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "image_saturation",
+      "label": "Image Saturation (%)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 90
+    },
+
+    {
+      "type": "header",
+      "content": "📊 Stat Cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stat_1",
+      "label": "Show Stat Card 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_1_number",
+      "label": "Stat 1 Number",
+      "default": "20+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 Label",
+      "default": "Dishes each week"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stat_2",
+      "label": "Show Stat Card 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_2_number",
+      "label": "Stat 2 Number",
+      "default": "100%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 Label",
+      "default": "Locally sourced"
+    },
+    {
+      "type": "range",
+      "id": "stat_number_size",
+      "label": "Stat Number Font Size (px)",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "stat_label_size",
+      "label": "Stat Label Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 10
+    },
+
+    {
+      "type": "header",
+      "content": "🏅 Rotating Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Rotating Badge",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "badge_text",
+      "label": "Badge Text (use line breaks for multiline)",
+      "default": "Fresh\nEvery\nTuesday"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge Size (px)",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Badge Font Size (px)",
+      "min": 6,
+      "max": 16,
+      "step": 1,
+      "default": 9
+    },
+
+    {
+      "type": "header",
+      "content": "✏️ Content"
+    },
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Eyebrow / Label",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Heading (use <em> for italic)",
+      "default": "<p>Provisions from<br><em>Our Kitchen</em><br>to Yours.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body Text (HTML allowed for <strong>)",
+      "default": "Onda Provisions was born from a simple belief: <strong>everyone deserves access to restaurant-quality food at home.</strong> We're a team of local chefs passionate about seasonal ingredients, honest cooking, and the kind of meals that make a Tuesday feel like something special."
+    },
+    {
+      "type": "text",
+      "id": "watermark_text",
+      "label": "Background Watermark Text",
+      "default": "ONDA"
+    },
+    {
+      "type": "range",
+      "id": "watermark_size",
+      "label": "Watermark Font Size (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
+
+    {
+      "type": "header",
+      "content": "💬 Pull Quote"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote",
+      "label": "Show Pull Quote",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "Quote Text",
+      "default": "\"We cook the way we'd feed our own families — with care, with quality, and with the best ingredients our region has to offer.\""
+    },
+    {
+      "type": "text",
+      "id": "quote_cite",
+      "label": "Quote Attribution",
+      "default": "The Onda Team"
+    },
+
+    {
+      "type": "header",
+      "content": "🌿 Values"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_values",
+      "label": "Show Values Row",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "value_1_name",
+      "label": "Value 1 Name",
+      "default": "Local First"
+    },
+    {
+      "type": "text",
+      "id": "value_1_desc",
+      "label": "Value 1 Description",
+      "default": "Ingredients sourced from regional farms & producers"
+    },
+    {
+      "type": "text",
+      "id": "value_2_name",
+      "label": "Value 2 Name",
+      "default": "Always Fresh"
+    },
+    {
+      "type": "text",
+      "id": "value_2_desc",
+      "label": "Value 2 Description",
+      "default": "Prepared fresh each week, never frozen"
+    },
+    {
+      "type": "text",
+      "id": "value_3_name",
+      "label": "Value 3 Name",
+      "default": "Made with Love"
+    },
+    {
+      "type": "text",
+      "id": "value_3_desc",
+      "label": "Value 3 Description",
+      "default": "Every dish crafted by our in-house chef team"
+    },
+
+    {
+      "type": "header",
+      "content": "🔗 Button / CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Learn Our Story"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_new_tab",
+      "label": "Open in New Tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        { "value": "underline", "label": "Underline (Ghost)" },
+        { "value": "filled",    "label": "Filled" },
+        { "value": "outlined",  "label": "Outlined" }
+      ],
+      "default": "underline"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Background / Border Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size (px)",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "button_padding_v",
+      "label": "Button Padding Vertical (px)",
+      "min": 6,
+      "max": 32,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_h",
+      "label": "Button Padding Horizontal (px)",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 0
+    }
+
+  ],
+
+  "presets": [
+    {
+      "name": "Onda Chef Story",
+      "category": "Brand"
+    }
+  ]
+}
+{% endschema %}

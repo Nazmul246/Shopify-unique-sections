@@ -1,0 +1,730 @@
+{% comment %}
+  Onda Provisions – CTA Section
+  Theme: Serenity (Shopify)
+  All settings are dynamic via Schema
+{% endcomment %}
+
+<section
+  class="qc-onda-cta"
+  id="qc-onda-cta-{{ section.id }}"
+  style="
+    --qc-section-height: {{ section.settings.section_height }}px;
+    --qc-max-width: {{ section.settings.content_max_width }}px;
+    --qc-overlay-color: {{ section.settings.overlay_color }};
+    --qc-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --qc-bg-position: {{ section.settings.bg_position }};
+    --qc-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --qc-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --qc-eyebrow-spacing: {{ section.settings.eyebrow_letter_spacing }}em;
+    --qc-headline-color: {{ section.settings.headline_color }};
+    --qc-headline-size: {{ section.settings.headline_font_size }}px;
+    --qc-headline-em-color: {{ section.settings.headline_italic_color }};
+    --qc-rule-color: {{ section.settings.rule_color }};
+    --qc-rule-width: {{ section.settings.rule_width }}px;
+    --qc-sub-color: {{ section.settings.subtext_color }};
+    --qc-sub-size: {{ section.settings.subtext_font_size }}px;
+    --qc-btn-primary-bg: {{ section.settings.btn_primary_bg }};
+    --qc-btn-primary-text: {{ section.settings.btn_primary_text_color }};
+    --qc-btn-primary-border: {{ section.settings.btn_primary_border_color }};
+    --qc-btn-primary-hover-bg: {{ section.settings.btn_primary_hover_bg }};
+    --qc-btn-primary-hover-text: {{ section.settings.btn_primary_hover_text }};
+    --qc-btn-primary-size: {{ section.settings.btn_primary_font_size }}px;
+    --qc-btn-primary-padding-v: {{ section.settings.btn_primary_padding_v }}px;
+    --qc-btn-primary-padding-h: {{ section.settings.btn_primary_padding_h }}px;
+    --qc-btn-secondary-bg: {{ section.settings.btn_secondary_bg }};
+    --qc-btn-secondary-text: {{ section.settings.btn_secondary_text_color }};
+    --qc-btn-secondary-border: {{ section.settings.btn_secondary_border_color }};
+    --qc-btn-secondary-hover-border: {{ section.settings.btn_secondary_hover_border }};
+    --qc-btn-secondary-hover-text: {{ section.settings.btn_secondary_hover_text }};
+    --qc-btn-secondary-size: {{ section.settings.btn_secondary_font_size }}px;
+    --qc-btn-secondary-padding-v: {{ section.settings.btn_secondary_padding_v }}px;
+    --qc-btn-secondary-padding-h: {{ section.settings.btn_secondary_padding_h }}px;
+    --qc-btn-gap: {{ section.settings.btn_gap }}px;
+    --qc-content-padding: {{ section.settings.content_padding }}px;
+    --qc-text-align: {{ section.settings.text_alignment }};
+  "
+>
+
+  {%- comment %} Background Image {%- endcomment %}
+  <div class="qc-onda-cta__bg"
+    {% if section.settings.bg_image != blank %}
+      style="background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');"
+    {% endif %}
+  ></div>
+
+  {%- comment %} Overlay {%- endcomment %}
+  <div class="qc-onda-cta__overlay"></div>
+
+  {%- comment %} Content {%- endcomment %}
+  <div class="qc-onda-cta__content">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="qc-onda-cta__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+
+    {%- if section.settings.headline != blank -%}
+      <{{ section.settings.headline_tag }} class="qc-onda-cta__headline">
+        {{ section.settings.headline }}
+      </{{ section.settings.headline_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.show_rule -%}
+      <div class="qc-onda-cta__rule"></div>
+    {%- endif -%}
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="qc-onda-cta__sub">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.btn_primary_label != blank or section.settings.btn_secondary_label != blank -%}
+      <div class="qc-onda-cta__buttons">
+
+        {%- if section.settings.btn_primary_label != blank -%}
+          <a
+            href="{{ section.settings.btn_primary_link | default: '#' }}"
+            class="qc-onda-btn qc-onda-btn--primary"
+            {% if section.settings.btn_primary_new_tab %}target="_blank" rel="noopener"{% endif %}
+          >
+            {{- section.settings.btn_primary_label -}}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.btn_secondary_label != blank -%}
+          <a
+            href="{{ section.settings.btn_secondary_link | default: '#' }}"
+            class="qc-onda-btn qc-onda-btn--secondary"
+            {% if section.settings.btn_secondary_new_tab %}target="_blank" rel="noopener"{% endif %}
+          >
+            {{- section.settings.btn_secondary_label -}}
+          </a>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  #qc-onda-cta-{{ section.id }} {
+    position: relative;
+    min-height: var(--qc-section-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: var(--qc-bg-position);
+    background-repeat: no-repeat;
+    {% if section.settings.bg_parallax %}
+    background-attachment: fixed;
+    {% endif %}
+    z-index: 0;
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--qc-overlay-color);
+    opacity: var(--qc-overlay-opacity);
+    z-index: 1;
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__content {
+    position: relative;
+    z-index: 2;
+    text-align: var(--qc-text-align);
+    padding: var(--qc-content-padding);
+    max-width: var(--qc-max-width);
+    width: 100%;
+    animation: qcOndaFadeUp 1.1s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes qcOndaFadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Eyebrow */
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__eyebrow {
+    display: block;
+    font-size: var(--qc-eyebrow-size);
+    letter-spacing: var(--qc-eyebrow-spacing);
+    text-transform: uppercase;
+    color: var(--qc-eyebrow-color);
+    margin-bottom: 18px;
+    animation: qcOndaFadeUp 1.1s .15s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  /* Headline */
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__headline {
+    font-size: var(--qc-headline-size);
+    font-weight: {{ section.settings.headline_font_weight }};
+    line-height: {{ section.settings.headline_line_height }};
+    color: var(--qc-headline-color);
+    margin: 0 0 14px;
+    animation: qcOndaFadeUp 1.1s .25s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__headline em {
+    font-style: italic;
+    color: var(--qc-headline-em-color);
+  }
+
+  /* Divider rule */
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__rule {
+    width: var(--qc-rule-width);
+    height: 1.5px;
+    background: var(--qc-rule-color);
+    margin: 0 {% if section.settings.text_alignment == 'center' %}auto{% elsif section.settings.text_alignment == 'right' %}0 0 auto{% else %}0{% endif %} 20px;
+    animation: qcOndaFadeUp 1.1s .35s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  /* Subtext */
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__sub {
+    font-size: var(--qc-sub-size);
+    color: var(--qc-sub-color);
+    line-height: {{ section.settings.subtext_line_height }};
+    max-width: {{ section.settings.subtext_max_width }}px;
+    margin: 0 {% if section.settings.text_alignment == 'center' %}auto{% elsif section.settings.text_alignment == 'right' %}0 0 auto{% else %}0{% endif %} 32px;
+    animation: qcOndaFadeUp 1.1s .4s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  /* Buttons wrapper */
+  #qc-onda-cta-{{ section.id }} .qc-onda-cta__buttons {
+    display: flex;
+    gap: var(--qc-btn-gap);
+    justify-content: {% if section.settings.text_alignment == 'center' %}center{% elsif section.settings.text_alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+    flex-wrap: wrap;
+    animation: qcOndaFadeUp 1.1s .5s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  /* Base button styles */
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Primary button */
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn--primary {
+    padding: var(--qc-btn-primary-padding-v) var(--qc-btn-primary-padding-h);
+    font-size: var(--qc-btn-primary-size);
+    background-color: var(--qc-btn-primary-bg);
+    color: var(--qc-btn-primary-text);
+    border-color: var(--qc-btn-primary-border);
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn--primary:hover {
+    background-color: var(--qc-btn-primary-hover-bg);
+    color: var(--qc-btn-primary-hover-text);
+    border-color: var(--qc-btn-primary-hover-text);
+  }
+
+  /* Secondary button */
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn--secondary {
+    padding: var(--qc-btn-secondary-padding-v) var(--qc-btn-secondary-padding-h);
+    font-size: var(--qc-btn-secondary-size);
+    background-color: var(--qc-btn-secondary-bg);
+    color: var(--qc-btn-secondary-text);
+    border-color: var(--qc-btn-secondary-border);
+  }
+
+  #qc-onda-cta-{{ section.id }} .qc-onda-btn--secondary:hover {
+    border-color: var(--qc-btn-secondary-hover-border);
+    color: var(--qc-btn-secondary-hover-text);
+  }
+
+  /* ─── Responsive ─────────────────────────────────── */
+
+  @media screen and (max-width: 1024px) {
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__headline {
+      font-size: calc(var(--qc-headline-size) * 0.82);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    #qc-onda-cta-{{ section.id }} {
+      min-height: calc(var(--qc-section-height) * 0.85);
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__bg {
+      background-attachment: scroll;
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__content {
+      padding: 32px 24px;
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__headline {
+      font-size: calc(var(--qc-headline-size) * 0.72);
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__sub {
+      font-size: calc(var(--qc-sub-size) * 0.95);
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #qc-onda-cta-{{ section.id }} {
+      min-height: calc(var(--qc-section-height) * 0.75);
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__headline {
+      font-size: calc(var(--qc-headline-size) * 0.6);
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-cta__buttons {
+      flex-direction: column;
+      align-items: {% if section.settings.text_alignment == 'center' %}center{% elsif section.settings.text_alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+    }
+    #qc-onda-cta-{{ section.id }} .qc-onda-btn--primary,
+    #qc-onda-cta-{{ section.id }} .qc-onda-btn--secondary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Onda CTA Section",
+  "tag": "section",
+  "class": "qc-onda-cta-wrapper",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "📐 Layout & Section"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section Height (px)",
+      "min": 300,
+      "max": 900,
+      "step": 10,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content Max Width (px)",
+      "min": 400,
+      "max": 1400,
+      "step": 10,
+      "default": 780
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "label": "Content Padding (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "center"
+    },
+
+    {
+      "type": "header",
+      "content": "🖼 Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "select",
+      "id": "bg_position",
+      "label": "Background Position",
+      "options": [
+        { "value": "center center", "label": "Center Center" },
+        { "value": "center top",    "label": "Center Top" },
+        { "value": "center bottom", "label": "Center Bottom" },
+        { "value": "left center",   "label": "Left Center" },
+        { "value": "right center",  "label": "Right Center" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "checkbox",
+      "id": "bg_parallax",
+      "label": "Enable Parallax Scroll",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "🌑 Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity (%)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 70
+    },
+
+    {
+      "type": "header",
+      "content": "✏️ Eyebrow Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "Fresh · Local · Weekly"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "label": "Eyebrow Font Size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "🔤 Headline"
+    },
+    {
+      "type": "richtext",
+      "id": "headline",
+      "label": "Headline (use <em> for italic)",
+      "default": "<p>Good food, <em>delivered<\/em><br>to your door.<\/p>"
+    },
+    {
+      "type": "select",
+      "id": "headline_tag",
+      "label": "Headline HTML Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "headline_color",
+      "label": "Headline Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "headline_italic_color",
+      "label": "Headline Italic Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "range",
+      "id": "headline_font_size",
+      "label": "Headline Font Size (px)",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "headline_font_weight",
+      "label": "Headline Font Weight",
+      "options": [
+        { "value": "300", "label": "Light (300)" },
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "SemiBold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "300"
+    },
+    {
+      "type": "text",
+      "id": "headline_line_height",
+      "label": "Headline Line Height",
+      "default": "1.12"
+    },
+
+    {
+      "type": "header",
+      "content": "➖ Divider Rule"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rule",
+      "label": "Show Divider Rule",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Rule Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "range",
+      "id": "rule_width",
+      "label": "Rule Width (px)",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "default": 52
+    },
+
+    {
+      "type": "header",
+      "content": "📝 Subtext"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Every Tuesday we drop a new menu of chef-crafted meals made from locally sourced ingredients. Order by Friday — we'll handle the rest."
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "range",
+      "id": "subtext_font_size",
+      "label": "Subtext Font Size (px)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "subtext_line_height",
+      "label": "Subtext Line Height",
+      "default": "1.75"
+    },
+    {
+      "type": "range",
+      "id": "subtext_max_width",
+      "label": "Subtext Max Width (px)",
+      "min": 200,
+      "max": 900,
+      "step": 10,
+      "default": 500
+    },
+
+    {
+      "type": "header",
+      "content": "🟠 Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_primary_label",
+      "label": "Primary Button Label",
+      "default": "Shop This Week's Menu"
+    },
+    {
+      "type": "url",
+      "id": "btn_primary_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_primary_new_tab",
+      "label": "Open in New Tab",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg",
+      "label": "Background Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_border_color",
+      "label": "Border Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_hover_bg",
+      "label": "Hover Background",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_hover_text",
+      "label": "Hover Text Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "range",
+      "id": "btn_primary_font_size",
+      "label": "Font Size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "btn_primary_padding_v",
+      "label": "Vertical Padding (px)",
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "btn_primary_padding_h",
+      "label": "Horizontal Padding (px)",
+      "min": 16,
+      "max": 100,
+      "step": 2,
+      "default": 42
+    },
+
+    {
+      "type": "header",
+      "content": "⬜ Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_secondary_label",
+      "label": "Secondary Button Label",
+      "default": "Our Story"
+    },
+    {
+      "type": "url",
+      "id": "btn_secondary_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_secondary_new_tab",
+      "label": "Open in New Tab",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "btn_secondary_bg",
+      "label": "Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "btn_secondary_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_secondary_border_color",
+      "label": "Border Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "btn_secondary_hover_border",
+      "label": "Hover Border Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_secondary_hover_text",
+      "label": "Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "btn_secondary_font_size",
+      "label": "Font Size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "btn_secondary_padding_v",
+      "label": "Vertical Padding (px)",
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "btn_secondary_padding_h",
+      "label": "Horizontal Padding (px)",
+      "min": 16,
+      "max": 100,
+      "step": 2,
+      "default": 42
+    },
+
+    {
+      "type": "header",
+      "content": "🔧 Button Group"
+    },
+    {
+      "type": "range",
+      "id": "btn_gap",
+      "label": "Gap Between Buttons (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 16
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Onda CTA Section"
+    }
+  ]
+}
+{% endschema %}

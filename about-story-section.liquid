@@ -1,0 +1,975 @@
+{% comment %}
+  Onda Provisions – Our Story Section
+  Compatible with: Serenity Theme (Shopify)
+  All settings are dynamic via schema
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'onda-story-' | append: section.id
+  assign bg_color = section.settings.background_color
+  assign max_width = section.settings.max_width
+-%}
+
+<style>
+  #{{ section_id }} {
+    background-color: {{ bg_color }};
+    overflow: hidden;
+  }
+
+  #{{ section_id }} .onda-label-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: {{ section.settings.label_padding_top }}px {{ section.settings.section_padding_horizontal }}px 0;
+    max-width: {{ max_width }}px;
+    margin: 0 auto;
+  }
+
+  #{{ section_id }} .onda-label-pill {
+    font-size: {{ section.settings.label_font_size }}px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_teal_color }};
+    border: 1px solid {{ section.settings.accent_teal_color | color_modify: 'alpha', 0.3 }};
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  #{{ section_id }} .onda-label-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, {{ section.settings.accent_teal_color | color_modify: 'alpha', 0.25 }}, transparent);
+  }
+
+  /* ── GRID ── */
+  #{{ section_id }} .onda-story-grid {
+    display: grid;
+    grid-template-columns: {{ section.settings.image_col_ratio }}fr {{ section.settings.text_col_ratio }}fr;
+    min-height: {{ section.settings.grid_min_height }}px;
+    max-width: {{ max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* ── IMAGE COLUMN ── */
+  #{{ section_id }} .onda-grid__images {
+    position: relative;
+    overflow: hidden;
+    background: {{ section.settings.image_bg_color }};
+  }
+
+  #{{ section_id }} .onda-img-primary {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: {{ section.settings.image_opacity | divided_by: 100.0 }};
+    filter: saturate({{ section.settings.image_saturation | divided_by: 100.0 }}) brightness({{ section.settings.image_brightness | divided_by: 100.0 }});
+    display: block;
+  }
+
+  #{{ section_id }} .onda-img-slash {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      {{ section.settings.accent_teal_color | color_modify: 'alpha', 0.35 }} 0%,
+      transparent 45%,
+      transparent 55%,
+      {{ section.settings.accent_orange_color | color_modify: 'alpha', 0.1 }} 100%
+    );
+    pointer-events: none;
+  }
+
+  #{{ section_id }} .onda-img-chapter {
+    position: absolute;
+    top: 2.5rem;
+    left: 2.5rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: {{ section.settings.label_font_size }}px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  #{{ section_id }} .onda-img-chapter::after {
+    content: '';
+    width: 1px;
+    height: 3rem;
+    background: rgba(255,255,255,0.25);
+  }
+
+  #{{ section_id }} .onda-img-year {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    font-size: {{ section.settings.year_font_size }}px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.12);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  #{{ section_id }} .onda-img-corner {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 {{ section.settings.corner_size }}px {{ section.settings.corner_size }}px;
+    border-color: transparent transparent {{ section.settings.accent_orange_color }} transparent;
+  }
+
+  /* ── TEXT COLUMN ── */
+  #{{ section_id }} .onda-grid__text {
+    padding: {{ section.settings.text_padding_vertical }}px {{ section.settings.text_padding_right }}px {{ section.settings.text_padding_vertical }}px {{ section.settings.text_padding_left }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background-color: {{ section.settings.text_column_bg }};
+  }
+
+  #{{ section_id }} .onda-grid__text::before {
+    content: '';
+    position: absolute;
+    top: 3rem; right: 3rem;
+    width: 120px; height: 120px;
+    background-image: radial-gradient(circle, {{ section.settings.accent_teal_color | color_modify: 'alpha', 0.18 }} 1px, transparent 1px);
+    background-size: 12px 12px;
+    pointer-events: none;
+  }
+
+  /* ── EYEBROW ── */
+  #{{ section_id }} .onda-story-eyebrow {
+    font-size: {{ section.settings.eyebrow_font_size }}px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: {{ section.settings.eyebrow_color }};
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  #{{ section_id }} .onda-story-eyebrow::before {
+    content: '';
+    width: 2rem; height: 1px;
+    background: {{ section.settings.eyebrow_color }};
+    flex-shrink: 0;
+  }
+
+  /* ── HEADING ── */
+  #{{ section_id }} .onda-story-title {
+    font-size: {{ section.settings.heading_font_size }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    line-height: 1.05;
+    color: {{ section.settings.heading_color }};
+    margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+  }
+  #{{ section_id }} .onda-story-title em {
+    font-style: italic;
+    color: {{ section.settings.heading_em_color }};
+  }
+
+  /* ── CHAPTERS ── */
+  #{{ section_id }} .onda-story-chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: {{ section.settings.chapters_margin_bottom }}px;
+  }
+
+  #{{ section_id }} .onda-chapter {
+    display: grid;
+    grid-template-columns: {{ section.settings.chapter_num_width }}px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding-top: {{ section.settings.chapter_gap }}px;
+  }
+  #{{ section_id }} .onda-chapter:first-child {
+    padding-top: 0;
+  }
+  #{{ section_id }} .onda-chapter + .onda-chapter {
+    border-top: 1px solid {{ section.settings.divider_color }};
+    margin-top: {{ section.settings.chapter_gap }}px;
+  }
+
+  #{{ section_id }} .onda-chapter__num {
+    font-size: {{ section.settings.chapter_num_font_size }}px;
+    font-weight: 300;
+    color: {{ section.settings.chapter_num_color }};
+    line-height: 1.2;
+    padding-top: 0.1rem;
+  }
+
+  #{{ section_id }} .onda-chapter__heading {
+    font-size: {{ section.settings.chapter_heading_font_size }}px;
+    font-weight: 400;
+    color: {{ section.settings.chapter_heading_color }};
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  #{{ section_id }} .onda-chapter__text {
+    font-size: {{ section.settings.chapter_text_font_size }}px;
+    line-height: 1.75;
+    color: {{ section.settings.chapter_text_color }};
+    font-weight: 300;
+  }
+
+  /* ── CTA ROW ── */
+  #{{ section_id }} .onda-cta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: {{ section.settings.cta_gap }}px;
+    padding-top: {{ section.settings.cta_padding_top }}px;
+    border-top: 1px solid {{ section.settings.divider_color }};
+  }
+
+  #{{ section_id }} .onda-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    font-size: {{ section.settings.button_font_size }}px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  #{{ section_id }} .onda-btn-primary:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+    transform: translateY(-2px);
+  }
+
+  #{{ section_id }} .onda-cta-note {
+    font-size: {{ section.settings.cta_note_font_size }}px;
+    color: {{ section.settings.cta_note_color }};
+    font-weight: 300;
+    max-width: 28ch;
+    line-height: 1.5;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media screen and (max-width: {{ section.settings.breakpoint_tablet }}px) {
+    #{{ section_id }} .onda-story-grid {
+      grid-template-columns: 1fr;
+    }
+    #{{ section_id }} .onda-grid__images {
+      min-height: {{ section.settings.mobile_image_height }}px;
+    }
+    #{{ section_id }} .onda-grid__text {
+      padding: {{ section.settings.mobile_text_padding }}px {{ section.settings.section_padding_horizontal }}px;
+    }
+    #{{ section_id }} .onda-grid__text::before {
+      display: none;
+    }
+    #{{ section_id }} .onda-story-title {
+      font-size: {{ section.settings.heading_font_size | minus: 8 }}px;
+    }
+    #{{ section_id }} .onda-cta-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media screen and (max-width: {{ section.settings.breakpoint_mobile }}px) {
+    #{{ section_id }} .onda-story-title {
+      font-size: {{ section.settings.heading_font_size | minus: 14 }}px;
+    }
+    #{{ section_id }} .onda-grid__images {
+      min-height: {{ section.settings.mobile_image_height | minus: 60 }}px;
+    }
+    #{{ section_id }} .onda-chapter {
+      grid-template-columns: {{ section.settings.chapter_num_width | minus: 8 }}px 1fr;
+    }
+    #{{ section_id }} .onda-btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<section id="{{ section_id }}" class="onda-our-story">
+
+  {%- if section.settings.show_label_row -%}
+  <div class="onda-label-row">
+    <div class="onda-label-pill">{{ section.settings.label_pill_text }}</div>
+    <div class="onda-label-line"></div>
+  </div>
+  {%- endif -%}
+
+  <div class="onda-story-grid">
+
+    <!-- LEFT: IMAGE -->
+    <div class="onda-grid__images">
+      {%- if section.settings.story_image != blank -%}
+        {{
+          section.settings.story_image
+          | image_url: width: 900
+          | image_tag:
+            class: 'onda-img-primary',
+            loading: 'lazy',
+            alt: section.settings.story_image.alt | escape
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'onda-img-primary' }}
+      {%- endif -%}
+
+      {%- if section.settings.show_image_overlay -%}
+        <div class="onda-img-slash"></div>
+      {%- endif -%}
+
+      {%- if section.settings.image_side_label != blank -%}
+        <div class="onda-img-chapter">{{ section.settings.image_side_label }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.image_year_stamp != blank -%}
+        <div class="onda-img-year">{{ section.settings.image_year_stamp }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_corner_accent -%}
+        <div class="onda-img-corner"></div>
+      {%- endif -%}
+    </div>
+
+    <!-- RIGHT: TEXT -->
+    <div class="onda-grid__text">
+
+      {%- if section.settings.eyebrow_text != blank -%}
+        <p class="onda-story-eyebrow">{{ section.settings.eyebrow_text }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="onda-story-title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      <div class="onda-story-chapters">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'chapter' -%}
+            <div class="onda-chapter" {{ block.shopify_attributes }}>
+              <span class="onda-chapter__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <div class="onda-chapter__content">
+                {%- if block.settings.chapter_heading != blank -%}
+                  <h3 class="onda-chapter__heading">{{ block.settings.chapter_heading }}</h3>
+                {%- endif -%}
+                {%- if block.settings.chapter_text != blank -%}
+                  <p class="onda-chapter__text">{{ block.settings.chapter_text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="onda-cta-row">
+        {%- if section.settings.button_label != blank -%}
+          <a
+            href="{{ section.settings.button_url }}"
+            class="onda-btn-primary"
+          >
+            {{ section.settings.button_label }}
+            {%- if section.settings.show_button_arrow -%}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta_note != blank -%}
+          <p class="onda-cta-note">{{ section.settings.cta_note }}</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Onda – Our Story",
+  "tag": "section",
+  "class": "onda-our-story-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout & Spacing"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section Max Width (px)",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "grid_min_height",
+      "label": "Grid Min Height (px)",
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "image_col_ratio",
+      "label": "Image Column Width Ratio",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "text_col_ratio",
+      "label": "Text Column Width Ratio",
+      "min": 4,
+      "max": 9,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Horizontal Padding (px)",
+      "min": 10,
+      "max": 120,
+      "step": 2,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_padding_vertical",
+      "label": "Text Column Vertical Padding (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_padding_right",
+      "label": "Text Column Right Padding (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "text_padding_left",
+      "label": "Text Column Left Padding (px)",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_padding",
+      "label": "Mobile Text Padding (px)",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "label": "Mobile Image Height (px)",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "default": 340
+    },
+    {
+      "type": "range",
+      "id": "breakpoint_tablet",
+      "label": "Tablet Breakpoint (px)",
+      "min": 600,
+      "max": 1100,
+      "step": 10,
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "breakpoint_mobile",
+      "label": "Mobile Breakpoint (px)",
+      "min": 320,
+      "max": 700,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_column_bg",
+      "label": "Text Column Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_bg_color",
+      "label": "Image Column Background",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "color",
+      "id": "accent_teal_color",
+      "label": "Accent – Teal",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "accent_orange_color",
+      "label": "Accent – Orange",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#e0ddd6"
+    },
+    {
+      "type": "header",
+      "content": "Label Row"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label_row",
+      "label": "Show Label Row",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_pill_text",
+      "label": "Label Pill Text",
+      "default": "Chapter 01"
+    },
+    {
+      "type": "range",
+      "id": "label_padding_top",
+      "label": "Label Row Top Padding (px)",
+      "min": 20,
+      "max": 100,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Label Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Story Image"
+    },
+    {
+      "type": "range",
+      "id": "image_opacity",
+      "label": "Image Opacity (%)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 85
+    },
+    {
+      "type": "range",
+      "id": "image_saturation",
+      "label": "Image Saturation (%)",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 85
+    },
+    {
+      "type": "range",
+      "id": "image_brightness",
+      "label": "Image Brightness (%)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_overlay",
+      "label": "Show Diagonal Overlay",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "image_side_label",
+      "label": "Vertical Side Label",
+      "default": "Our Origin Story"
+    },
+    {
+      "type": "text",
+      "id": "image_year_stamp",
+      "label": "Year Stamp",
+      "default": "2024"
+    },
+    {
+      "type": "range",
+      "id": "year_font_size",
+      "label": "Year Stamp Font Size (px)",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "checkbox",
+      "id": "show_corner_accent",
+      "label": "Show Corner Accent",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "corner_size",
+      "label": "Corner Accent Size (px)",
+      "min": 40,
+      "max": 160,
+      "step": 8,
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Eyebrow & Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "The Beginning"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "label": "Eyebrow Font Size (px)",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Main Heading (use <em> for italic teal)",
+      "default": "<p>Born from a passion<br>for <em>honest food.</em></p>"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading Font Size (px)",
+      "min": 22,
+      "max": 72,
+      "step": 2,
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "300", "label": "Light (300)" },
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "300"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "color",
+      "id": "heading_em_color",
+      "label": "Heading Italic Highlight Color",
+      "default": "#036774"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Heading Bottom Margin (px)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Chapter Styles"
+    },
+    {
+      "type": "range",
+      "id": "chapter_gap",
+      "label": "Gap Between Chapters (px)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "chapters_margin_bottom",
+      "label": "Chapters Bottom Margin (px)",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "chapter_num_width",
+      "label": "Chapter Number Column Width (px)",
+      "min": 24,
+      "max": 64,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "chapter_num_font_size",
+      "label": "Chapter Number Font Size (px)",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "chapter_num_color",
+      "label": "Chapter Number Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "range",
+      "id": "chapter_heading_font_size",
+      "label": "Chapter Heading Font Size (px)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 19
+    },
+    {
+      "type": "color",
+      "id": "chapter_heading_color",
+      "label": "Chapter Heading Color",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "range",
+      "id": "chapter_text_font_size",
+      "label": "Chapter Body Font Size (px)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "chapter_text_color",
+      "label": "Chapter Body Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Button & CTA"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop This Week's Menu"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show Arrow Icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button Hover Background Color",
+      "default": "#025560"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Button Padding Vertical (px)",
+      "min": 6,
+      "max": 28,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Button Padding Horizontal (px)",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "text",
+      "id": "cta_note",
+      "label": "CTA Note Text",
+      "default": "New menu drops every Tuesday. Order closes Friday 5 PM."
+    },
+    {
+      "type": "range",
+      "id": "cta_note_font_size",
+      "label": "CTA Note Font Size (px)",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "color",
+      "id": "cta_note_color",
+      "label": "CTA Note Text Color",
+      "default": "#999999"
+    },
+    {
+      "type": "range",
+      "id": "cta_gap",
+      "label": "CTA Row Gap (px)",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "cta_padding_top",
+      "label": "CTA Row Top Padding (px)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter Block",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "chapter_heading",
+          "label": "Chapter Heading",
+          "default": "The Idea"
+        },
+        {
+          "type": "textarea",
+          "id": "chapter_text",
+          "label": "Chapter Text",
+          "default": "Onda Provisions began with a simple question: why should great food only exist in restaurants? We're a team of local chefs and food lovers who believed the community deserved access to freshly prepared, chef-quality meals — delivered straight to their front door, week after week."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Onda – Our Story",
+      "blocks": [
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_heading": "The Idea",
+            "chapter_text": "Onda Provisions began with a simple question: why should great food only exist in restaurants? We're a team of local chefs and food lovers who believed the community deserved access to freshly prepared, chef-quality meals — delivered straight to their front door, week after week."
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_heading": "The Mission",
+            "chapter_text": "We built Onda around a weekly rhythm — because we believe good food is best when it's part of a routine. Every Tuesday, a new menu. Every Friday, your last chance to order. Every following Tuesday, a delivery that makes the week a little more delicious."
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_heading": "The Commitment",
+            "chapter_text": "We source locally, cook seasonally, and deliver personally — because we're not just a food business, we're your neighbours. Every order supports local producers, local kitchens, and a local team who genuinely cares what ends up on your table."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

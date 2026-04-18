@@ -1,0 +1,478 @@
+<ugc-video-slider-{{ ai_gen_id }}
+  class="ai-ugc-video-slider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-ugc-video-slider-container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-ugc-video-slider-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="ai-ugc-video-slider-wrapper-{{ ai_gen_id }}">
+      <div class="ai-ugc-video-slider-track-{{ ai_gen_id }}" data-track>
+        {% for i in (1..6) %}
+          {% liquid
+            assign video_key     = 'video_' | append: i
+            assign video_url_key = 'video_url_' | append: i
+            assign video         = block.settings[video_key]
+            assign video_url     = block.settings[video_url_key]
+
+            comment
+              "video" type returns a Shopify video object with a .sources array.
+              We must extract the actual CDN URL from that array.
+              Prefer mp4 format; fall back to the first available source.
+              If no upload, fall back to the plain URL string from video_url field.
+            endcomment
+
+            assign resolved_src = nil
+
+            if video != blank
+              comment Pick mp4 first, then fall back to sources[0]
+              endcomment
+              assign resolved_src = video.sources[0].url
+              for source in video.sources
+                if source.format == 'mp4'
+                  assign resolved_src = source.url
+                  break
+                endif
+              endfor
+            elsif video_url != blank
+              assign resolved_src = video_url
+            endif
+          %}
+
+          <div class="ai-ugc-video-slider-slide-{{ ai_gen_id }}">
+            {% if resolved_src != blank %}
+              <video
+                src="{{ resolved_src }}"
+                {% if block.settings.autoplay %}autoplay{% endif %}
+                {% if block.settings.loop %}loop{% endif %}
+                {% if block.settings.muted %}muted{% endif %}
+                playsinline
+                {% if block.settings.controls %}controls{% endif %}
+              ></video>
+            {% else %}
+              <div class="ai-ugc-video-slider-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+                <div class="ai-ugc-video-slider-empty-state-{{ ai_gen_id }}">
+                  Add video {{ i }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button
+        class="ai-ugc-video-slider-nav-{{ ai_gen_id }} ai-ugc-video-slider-nav-prev-{{ ai_gen_id }}"
+        data-prev
+        aria-label="Previous video"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <button
+        class="ai-ugc-video-slider-nav-{{ ai_gen_id }} ai-ugc-video-slider-nav-next-{{ ai_gen_id }}"
+        data-next
+        aria-label="Next video"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</ugc-video-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class UgcVideoSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.videosPerView = {{ block.settings.videos_per_view }};
+        this.videosPerViewMobile = {{ block.settings.videos_per_view_mobile }};
+        this.videoGap = {{ block.settings.video_gap }};
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.prevButton = this.querySelector('[data-prev]');
+        this.nextButton = this.querySelector('[data-next]');
+        this.slides = this.querySelectorAll('.ai-ugc-video-slider-slide-{{ ai_gen_id }}');
+        this.totalSlides = this.slides.length;
+
+        this.setupEventListeners();
+        this.updateButtons();
+        this.handleResize();
+
+        window.addEventListener('resize', () => this.handleResize());
+      }
+
+      handleResize() {
+        this.isMobile = window.innerWidth < 750;
+        this.currentVideosPerView = this.isMobile ? this.videosPerViewMobile : this.videosPerView;
+        this.maxIndex = Math.max(0, this.totalSlides - this.currentVideosPerView);
+
+        if (this.currentIndex > this.maxIndex) {
+          this.currentIndex = this.maxIndex;
+        }
+
+        this.updateSlider();
+      }
+
+      setupEventListeners() {
+        this.prevButton.addEventListener('click', () => this.prev());
+        this.nextButton.addEventListener('click', () => this.next());
+      }
+
+      prev() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+          this.updateSlider();
+        }
+      }
+
+      next() {
+        if (this.currentIndex < this.maxIndex) {
+          this.currentIndex++;
+          this.updateSlider();
+        }
+      }
+
+      updateSlider() {
+        const slideWidth = this.slides[0].offsetWidth;
+        const offset = -(this.currentIndex * (slideWidth + this.videoGap));
+        this.track.style.transform = `translateX(${offset}px)`;
+        this.updateButtons();
+      }
+
+      updateButtons() {
+        this.prevButton.disabled = this.currentIndex === 0;
+        this.nextButton.disabled = this.currentIndex >= this.maxIndex;
+      }
+    }
+
+    customElements.define('ugc-video-slider-{{ ai_gen_id }}', UgcVideoSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "UGC video slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customer reviews"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading spacing",
+      "min": 0, "max": 60, "step": 5, "unit": "px",
+      "default": 30
+    },
+
+    {
+      "type": "header",
+      "content": "Video 1"
+    },
+    {
+      "type": "video",
+      "id": "video_1",
+      "label": "Video 1 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_1",
+      "label": "Video 1 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video 2"
+    },
+    {
+      "type": "video",
+      "id": "video_2",
+      "label": "Video 2 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_2",
+      "label": "Video 2 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video 3"
+    },
+    {
+      "type": "video",
+      "id": "video_3",
+      "label": "Video 3 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_3",
+      "label": "Video 3 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video 4"
+    },
+    {
+      "type": "video",
+      "id": "video_4",
+      "label": "Video 4 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_4",
+      "label": "Video 4 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video 5"
+    },
+    {
+      "type": "video",
+      "id": "video_5",
+      "label": "Video 5 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_5",
+      "label": "Video 5 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video 6"
+    },
+    {
+      "type": "video",
+      "id": "video_6",
+      "label": "Video 6 — upload"
+    },
+    {
+      "type": "url",
+      "id": "video_url_6",
+      "label": "Video 6 — URL (used if no upload)"
+    },
+
+    {
+      "type": "header",
+      "content": "Video settings"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "16/9", "label": "16:9"           },
+        { "value": "9/16", "label": "9:16 (Portrait)" },
+        { "value": "4/3",  "label": "4:3"             },
+        { "value": "1/1",  "label": "1:1 (Square)"    }
+      ],
+      "default": "9/16"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "muted",
+      "label": "Muted",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "controls",
+      "label": "Show controls",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "video_border_radius",
+      "label": "Border radius",
+      "min": 0, "max": 40, "step": 2, "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "video_background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "videos_per_view",
+      "label": "Videos per view (Desktop)",
+      "min": 1, "max": 4, "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "videos_per_view_mobile",
+      "label": "Videos per view (Mobile)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "video_gap",
+      "label": "Gap between videos",
+      "min": 0, "max": 40, "step": 5, "unit": "px",
+      "default": 20
+    },
+
+    {
+      "type": "header",
+      "content": "Navigation buttons"
+    },
+    {
+      "type": "range",
+      "id": "nav_button_size",
+      "label": "Button size",
+      "min": 30, "max": 70, "step": 5, "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "nav_button_offset",
+      "label": "Button offset",
+      "min": 0, "max": 50, "step": 5, "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "nav_button_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_color",
+      "label": "Icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "nav_button_hover_color",
+      "label": "Hover icon color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50, "max": 100, "step": 5, "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0, "max": 100, "step": 5, "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0, "max": 100, "step": 5, "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Padding horizontal",
+      "min": 0, "max": 100, "step": 5, "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC video slider"
+    }
+  ]
+}
+{% endschema %}

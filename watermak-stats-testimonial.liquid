@@ -1,0 +1,762 @@
+{% comment %}
+  Section: About Hero / Mission
+  Theme: Serenity (Shopify)
+  File: sections/about-hero.liquid
+{% endcomment %}
+
+{%- liquid
+  assign section_id    = section.id
+  assign bg_color      = section.settings.background_color
+  assign watermark_txt = section.settings.watermark_text
+  assign eyebrow_txt   = section.settings.eyebrow_text
+  assign title_line1   = section.settings.title_line1
+  assign title_line2   = section.settings.title_line2
+  assign title_italic  = section.settings.title_italic
+  assign mission_txt   = section.settings.mission_text
+  assign quote_txt     = section.settings.quote_text
+  assign quote_author  = section.settings.quote_author
+  assign stat1_num     = section.settings.stat1_number
+  assign stat1_lbl     = section.settings.stat1_label
+  assign stat2_num     = section.settings.stat2_number
+  assign stat2_lbl     = section.settings.stat2_label
+  assign stat3_num     = section.settings.stat3_number
+  assign stat3_lbl     = section.settings.stat3_label
+  assign breadcrumb    = section.settings.breadcrumb_text
+  assign top_tag       = section.settings.top_tag_text
+  assign show_strip    = section.settings.show_bottom_strip
+-%}
+
+<style>
+  /* ─── Section Variables ─── */
+  #shopify-section-{{ section_id }} {
+    --ah-bg:               {{ section.settings.background_color }};
+    --ah-teal:             {{ section.settings.primary_color }};
+    --ah-orange:           {{ section.settings.accent_color }};
+    --ah-beige:            {{ section.settings.muted_color }};
+    --ah-dark:             {{ section.settings.heading_color }};
+    --ah-body-color:       {{ section.settings.body_text_color }};
+    --ah-card-bg:          {{ section.settings.card_bg_color }};
+    --ah-card-text:        {{ section.settings.card_text_color }};
+    --ah-watermark-opacity:{{ section.settings.watermark_opacity | divided_by: 100.0 }};
+    --ah-max-width:        {{ section.settings.max_width }}px;
+    --ah-section-pad-v:    {{ section.settings.section_padding_vertical }}px;
+    --ah-section-pad-h:    {{ section.settings.section_padding_horizontal }}vw;
+    --ah-heading-size:     {{ section.settings.heading_font_size }}px;
+    --ah-mission-size:     {{ section.settings.mission_font_size }}px;
+    --ah-quote-size:       {{ section.settings.quote_font_size }}px;
+    --ah-stat-num-size:    {{ section.settings.stat_number_size }}px;
+    --ah-eyebrow-size:     {{ section.settings.eyebrow_font_size }}px;
+    --ah-border-color:     {{ section.settings.border_color }};
+    --ah-strip-h:          {{ section.settings.strip_height }}px;
+    --ah-col-gap:          {{ section.settings.column_gap }}rem;
+    --ah-bar-size:         {{ section.settings.bar_label_size }}px;
+    --ah-stat-label-size:  {{ section.settings.stat_label_size }}px;
+    --ah-author-size:      {{ section.settings.author_font_size }}px;
+    --ah-card-pad:         {{ section.settings.card_padding }}px;
+  }
+
+  /* ─── Reset scoped to section ─── */
+  #shopify-section-{{ section_id }} *,
+  #shopify-section-{{ section_id }} *::before,
+  #shopify-section-{{ section_id }} *::after {
+    box-sizing: border-box;
+  }
+
+  /* ─── Wrapper ─── */
+  .ah-section {
+    background: var(--ah-bg);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─── Watermark ─── */
+  .ah-watermark {
+    position: absolute;
+    bottom: -2rem;
+    left: -1rem;
+    font-size: clamp(80px, 20vw, 180px);
+    font-weight: 300;
+    color: var(--ah-teal);
+    opacity: var(--ah-watermark-opacity);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  /* ─── Top bar ─── */
+  .ah-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2.5rem var(--ah-section-pad-h);
+    border-bottom: 1px solid var(--ah-border-color);
+    max-width: var(--ah-max-width);
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .ah-bar__breadcrumb {
+    font-size: var(--ah-bar-size);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ah-beige);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ah-bar__breadcrumb span {
+    color: var(--ah-teal);
+  }
+
+  .ah-bar__tag {
+    font-size: var(--ah-bar-size);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ah-teal);
+    border: 1px solid var(--ah-border-color);
+    padding: 0.35rem 0.85rem;
+  }
+
+  /* ─── Body grid ─── */
+  .ah-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: var(--ah-section-pad-v) var(--ah-section-pad-h);
+    gap: var(--ah-col-gap);
+    position: relative;
+    z-index: 2;
+    max-width: var(--ah-max-width);
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ─── Left column ─── */
+  .ah-left__eyebrow {
+    font-size: var(--ah-eyebrow-size);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ah-orange);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: ah-slideUp 0.9s 0.2s ease forwards;
+  }
+  .ah-left__eyebrow::before {
+    content: '';
+    width: 2.5rem;
+    height: 1px;
+    background: var(--ah-orange);
+    flex-shrink: 0;
+  }
+
+  .ah-left__title {
+    font-size: var(--ah-heading-size);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--ah-dark);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: ah-slideUp 1s 0.4s ease forwards;
+  }
+  .ah-left__title em {
+    font-style: italic;
+    color: var(--ah-teal);
+    display: block;
+  }
+
+  .ah-left__mission {
+    font-size: var(--ah-mission-size);
+    line-height: 1.75;
+    color: var(--ah-body-color);
+    font-weight: 300;
+    max-width: 44ch;
+    border-left: 2px solid var(--ah-orange);
+    padding-left: 1.5rem;
+    opacity: 0;
+    animation: ah-slideUp 1s 0.6s ease forwards;
+  }
+
+  /* ─── Right column / Card ─── */
+  .ah-right {
+    opacity: 0;
+    animation: ah-fadeIn 1.2s 0.8s ease forwards;
+  }
+
+  .ah-card {
+    background: var(--ah-card-bg);
+    padding: var(--ah-card-pad)px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ah-card::before {
+    content: '\201C';
+    position: absolute;
+    top: -1.5rem;
+    left: 2rem;
+    font-size: 140px;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .ah-card__quote {
+    font-style: italic;
+    font-size: var(--ah-quote-size);
+    font-weight: 300;
+    color: var(--ah-card-text);
+    line-height: 1.45;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ah-card__author {
+    font-size: var(--ah-author-size);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ah-card-text);
+    opacity: 0.55;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ─── Stats ─── */
+  .ah-card__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 2rem;
+  }
+
+  .ah-card__stat {
+    text-align: center;
+    padding: 0 1rem;
+    position: relative;
+  }
+  .ah-card__stat + .ah-card__stat::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; bottom: 10%;
+    width: 1px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .ah-stat__num {
+    font-size: var(--ah-stat-num-size);
+    font-weight: 300;
+    color: var(--ah-orange);
+    line-height: 1;
+    display: block;
+  }
+  .ah-stat__label {
+    font-size: var(--ah-stat-label-size);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ah-card-text);
+    opacity: 0.5;
+    margin-top: 0.4rem;
+    display: block;
+  }
+
+  /* ─── Bottom strip ─── */
+  .ah-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: var(--ah-strip-h);
+    background: linear-gradient(to right, var(--ah-teal) 0%, var(--ah-orange) 50%, var(--ah-teal) 100%);
+  }
+
+  /* ─── Animations ─── */
+  @keyframes ah-slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ah-fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ─── Responsive ─── */
+  @media screen and (max-width: 860px) {
+    .ah-body {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .ah-card {
+      padding: 40px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ah-bar {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+    .ah-card__stats {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+
+<section
+  class="ah-section"
+  id="ah-section-{{ section_id }}"
+  aria-label="{{ section.settings.eyebrow_text | escape }}"
+>
+
+  {%- if watermark_txt != blank -%}
+    <div class="ah-watermark" aria-hidden="true">{{ watermark_txt }}</div>
+  {%- endif -%}
+
+  <!-- Top Bar -->
+  {% comment %} <div class="ah-bar">
+    {%- if breadcrumb != blank -%}
+      <p class="ah-bar__breadcrumb">
+        <a href="{{ routes.root_url }}" style="color:inherit;text-decoration:none;">{{ 'general.breadcrumbs.home' | t }}</a>
+        <span>/</span>
+        {{ breadcrumb }}
+      </p>
+    {%- endif -%}
+    {%- if top_tag != blank -%}
+      <p class="ah-bar__tag">{{ top_tag }}</p>
+    {%- endif -%}
+  </div> {% endcomment %}
+
+  <!-- Main Body -->
+  <div class="ah-body">
+
+    <!-- Left: Text -->
+    <div class="ah-left">
+      {%- if eyebrow_txt != blank -%}
+        <p class="ah-left__eyebrow">{{ eyebrow_txt }}</p>
+      {%- endif -%}
+
+      {%- if title_line1 != blank or title_line2 != blank or title_italic != blank -%}
+        <h2 class="ah-left__title">
+          {%- if title_line1 != blank -%}{{ title_line1 }}<br>{%- endif -%}
+          {%- if title_line2 != blank -%}{{ title_line2 }}{%- endif -%}
+          {%- if title_italic != blank -%}<em>{{ title_italic }}</em>{%- endif -%}
+        </h2>
+      {%- endif -%}
+
+      {%- if mission_txt != blank -%}
+        <p class="ah-left__mission">{{ mission_txt }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- Right: Quote Card -->
+    <div class="ah-right">
+      <div class="ah-card">
+
+        {%- if quote_txt != blank -%}
+          <blockquote class="ah-card__quote">{{ quote_txt }}</blockquote>
+        {%- endif -%}
+
+        {%- if quote_author != blank -%}
+          <p class="ah-card__author">— {{ quote_author }}</p>
+        {%- endif -%}
+
+        <!-- Stats -->
+        <div class="ah-card__stats">
+          {%- if stat1_num != blank -%}
+            <div class="ah-card__stat">
+              <span class="ah-stat__num">{{ stat1_num }}</span>
+              <span class="ah-stat__label">{{ stat1_lbl }}</span>
+            </div>
+          {%- endif -%}
+          {%- if stat2_num != blank -%}
+            <div class="ah-card__stat">
+              <span class="ah-stat__num">{{ stat2_num }}</span>
+              <span class="ah-stat__label">{{ stat2_lbl }}</span>
+            </div>
+          {%- endif -%}
+          {%- if stat3_num != blank -%}
+            <div class="ah-card__stat">
+              <span class="ah-stat__num">{{ stat3_num }}</span>
+              <span class="ah-stat__label">{{ stat3_lbl }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  {%- if show_strip -%}
+    <div class="ah-strip" aria-hidden="true"></div>
+  {%- endif -%}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "About Hero",
+  "tag": "section",
+  "class": "section-about-hero",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Layout & Spacing"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Content Width (px)",
+      "min": 900,
+      "max": 1800,
+      "step": 20,
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_vertical",
+      "label": "Section Padding – Vertical (px)",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "label": "Section Padding – Horizontal (vw)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column Gap (rem)",
+      "min": 1,
+      "max": 12,
+      "step": 0.5,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card Padding (px)",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "default": 56
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#f5f3ef"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary (Teal)",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (Orange)",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted / Breadcrumb Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Text Color",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body / Mission Text Color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Quote Card Background",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Quote Card Text Color",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Title Font Size (px)",
+      "min": 28,
+      "max": 100,
+      "step": 2,
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "label": "Eyebrow Font Size (px)",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mission_font_size",
+      "label": "Mission Text Size (px)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size",
+      "label": "Quote Text Size (px)",
+      "min": 14,
+      "max": 36,
+      "step": 1,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "author_font_size",
+      "label": "Quote Author Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "bar_label_size",
+      "label": "Bar Label Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "stat_number_size",
+      "label": "Stat Number Font Size (px)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "stat_label_size",
+      "label": "Stat Label Font Size (px)",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "default": 10
+    },
+
+    {
+      "type": "header",
+      "content": "Watermark"
+    },
+    {
+      "type": "text",
+      "id": "watermark_text",
+      "label": "Watermark Word",
+      "default": "ONDA"
+    },
+    {
+      "type": "range",
+      "id": "watermark_opacity",
+      "label": "Watermark Opacity (%)",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 6
+    },
+
+    {
+      "type": "header",
+      "content": "Top Bar"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_text",
+      "label": "Breadcrumb Label",
+      "default": "About Us"
+    },
+    {
+      "type": "text",
+      "id": "top_tag_text",
+      "label": "Top Right Tag",
+      "default": "Est. Local · Delivered Weekly"
+    },
+
+    {
+      "type": "header",
+      "content": "Left Column – Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Label",
+      "default": "Who We Are"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Title – Line 1",
+      "default": "More Than"
+    },
+    {
+      "type": "text",
+      "id": "title_line2",
+      "label": "Title – Line 2",
+      "default": "a Meal."
+    },
+    {
+      "type": "text",
+      "id": "title_italic",
+      "label": "Title – Italic Line (accent color)",
+      "default": "A Provision."
+    },
+    {
+      "type": "textarea",
+      "id": "mission_text",
+      "label": "Mission Statement",
+      "default": "Onda Provisions is a locally rooted meal delivery service dedicated to bringing restaurant-quality food straight to your door — every single week. We believe that good food shouldn't be a luxury. It should be a Tuesday ritual."
+    },
+
+    {
+      "type": "header",
+      "content": "Quote Card"
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "Quote Text",
+      "default": "We started Onda Provisions because we wanted our neighbours to eat the way we cook for ourselves — with intention, with quality ingredients, and with love."
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Quote Author",
+      "default": "The Onda Provisions Team"
+    },
+
+    {
+      "type": "header",
+      "content": "Stat 1"
+    },
+    {
+      "type": "text",
+      "id": "stat1_number",
+      "label": "Stat 1 – Number",
+      "default": "20+"
+    },
+    {
+      "type": "text",
+      "id": "stat1_label",
+      "label": "Stat 1 – Label",
+      "default": "Weekly Dishes"
+    },
+
+    {
+      "type": "header",
+      "content": "Stat 2"
+    },
+    {
+      "type": "text",
+      "id": "stat2_number",
+      "label": "Stat 2 – Number",
+      "default": "100%"
+    },
+    {
+      "type": "text",
+      "id": "stat2_label",
+      "label": "Stat 2 – Label",
+      "default": "Local Delivery"
+    },
+
+    {
+      "type": "header",
+      "content": "Stat 3"
+    },
+    {
+      "type": "text",
+      "id": "stat3_number",
+      "label": "Stat 3 – Number",
+      "default": "52"
+    },
+    {
+      "type": "text",
+      "id": "stat3_label",
+      "label": "Stat 3 – Label",
+      "default": "Weeks a Year"
+    },
+
+    {
+      "type": "header",
+      "content": "Bottom Strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_strip",
+      "label": "Show Bottom Color Strip",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "strip_height",
+      "label": "Strip Height (px)",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "About Hero"
+    }
+  ]
+}
+{% endschema %}

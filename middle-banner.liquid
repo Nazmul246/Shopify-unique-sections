@@ -1,0 +1,892 @@
+{% comment %}
+  ============================================================
+  Section: Video Hero (Serenity Theme Compatible)
+  File: sections/video-hero.liquid
+  ============================================================
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+{%- liquid
+  assign section_id = section.id
+  assign vid_url    = section.settings.video_url | default: 'https://cdn.shopify.com/videos/c/o/v/5cf0858e2f8f4add99330fb49a1a96fb.mov'
+-%}
+
+<style>
+  /* ── ROOT TOKENS ── */
+  #shopify-section-{{ section_id }} {
+    --vh-teal:          {{ section.settings.color_teal }};
+    --vh-orange:        {{ section.settings.color_accent }};
+    --vh-beige:         {{ section.settings.color_beige }};
+    --vh-dark:          {{ section.settings.color_dark }};
+    --vh-max-width:     {{ section.settings.max_width }}px;
+    --vh-min-height:    {{ section.settings.min_height }}px;
+    --vh-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --vh-title-size:    {{ section.settings.title_size }}vw;
+    --vh-title-color:   {{ section.settings.title_color }};
+    --vh-title-italic-color: {{ section.settings.title_italic_color }};
+    --vh-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --vh-subtitle-color: {{ section.settings.subtitle_color }};
+    --vh-subtitle-size: {{ section.settings.subtitle_size | divided_by: 10.0 }}rem;
+    --vh-btn-bg:        {{ section.settings.btn_primary_bg }};
+    --vh-btn-bg-hover:  {{ section.settings.btn_primary_bg_hover }};
+    --vh-btn-color:     {{ section.settings.btn_primary_color }};
+    --vh-btn-ghost-color: {{ section.settings.btn_ghost_color }};
+    --vh-btn-ghost-border: {{ section.settings.btn_ghost_border }};
+    --vh-badge-bg:      {{ section.settings.badge_bg }};
+    --vh-badge-border:  {{ section.settings.badge_border }};
+    --vh-announce-bg:   {{ section.settings.announce_bg }};
+    --vh-announce-color: {{ section.settings.announce_color }};
+    --vh-announce-highlight: {{ section.settings.announce_highlight }};
+    --vh-padding-x:     {{ section.settings.padding_x }}vw;
+    --vh-padding-bottom: {{ section.settings.padding_bottom }}vh;
+    --vh-video-brightness: {{ section.settings.video_brightness | divided_by: 100.0 }};
+  }
+
+  /* ── HERO WRAP ── */
+  .vh-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: var(--vh-min-height);
+    max-width: var(--vh-max-width);
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  /* ── VIDEO ── */
+  .vh-hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(var(--vh-video-brightness)) saturate(1.1);
+  }
+
+  /* ── CINEMATIC OVERLAY ── */
+  .vh-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top,  color-mix(in srgb, var(--vh-teal) calc(var(--vh-overlay-opacity) * 72%), transparent) 0%, transparent 55%),
+      linear-gradient(to right, color-mix(in srgb, var(--vh-dark) calc(var(--vh-overlay-opacity) * 55%), transparent) 0%, transparent 60%),
+      linear-gradient(180deg,   color-mix(in srgb, var(--vh-dark) calc(var(--vh-overlay-opacity) * 35%), transparent) 0%, transparent 30%);
+  }
+
+  /* ── GRAIN ── */
+  .vh-hero__grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* ── CONTENT GRID ── */
+  .vh-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 var(--vh-padding-x) var(--vh-padding-bottom);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  /* ── ANNOUNCEMENT BAR ── */
+  .vh-announcement {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: var(--vh-announce-bg);
+    color: var(--vh-announce-color);
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-size: {{ section.settings.announce_size | divided_by: 10.0 }}rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .vh-announcement strong {
+    color: var(--vh-announce-highlight);
+    font-weight: 500;
+  }
+  {% unless section.settings.show_announcement %}
+  .vh-announcement { display: none; }
+  {% endunless %}
+
+  /* ── EYEBROW ── */
+  .vh-hero__eyebrow {
+    font-size: {{ section.settings.eyebrow_size | divided_by: 10.0 }}rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--vh-eyebrow-color);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: vh-fadeUp 0.9s 0.3s ease forwards;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .vh-hero__eyebrow::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--vh-eyebrow-color);
+  }
+
+  /* ── TITLE ── */
+  .vh-hero__title {
+    font-size: clamp(3.2rem, var(--vh-title-size), 7.5rem);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--vh-title-color);
+    opacity: 0;
+    animation: vh-fadeUp 1s 0.5s ease forwards;
+  }
+  .vh-hero__title em {
+    font-style: italic;
+    color: var(--vh-title-italic-color);
+  }
+
+  /* ── SUBTITLE ── */
+  .vh-hero__subtitle {
+    font-size: clamp(0.95rem, var(--vh-subtitle-size), 1.3rem);
+    font-weight: 300;
+    color: var(--vh-subtitle-color);
+    margin-top: 1.5rem;
+    max-width: 38ch;
+    line-height: 1.6;
+    opacity: 0;
+    animation: vh-fadeUp 1s 0.75s ease forwards;
+  }
+
+  /* ── ACTIONS ── */
+  .vh-hero__actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: vh-fadeUp 1s 1s ease forwards;
+  }
+
+  /* ── BUTTON PRIMARY ── */
+  .vh-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--vh-btn-bg);
+    color: var(--vh-btn-color);
+    font-size: {{ section.settings.btn_font_size | divided_by: 10.0 }}rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: {{ section.settings.btn_padding_y | divided_by: 10.0 }}rem {{ section.settings.btn_padding_x | divided_by: 10.0 }}rem;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.2s;
+    text-decoration: none;
+    border-radius: {{ section.settings.btn_radius }}px;
+  }
+
+  /* ── BUTTON GHOST ── */
+  .vh-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--vh-btn-ghost-color);
+    font-size: {{ section.settings.btn_font_size | divided_by: 10.0 }}rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: {{ section.settings.btn_padding_y | divided_by: 10.0 }}rem 0;
+    border: none;
+    border-bottom: 1px solid var(--vh-btn-ghost-border);
+    cursor: pointer;
+    transition: border-color 0.25s, color 0.25s;
+    text-decoration: none;
+  }
+  .vh-btn-ghost:hover {
+    border-color: var(--vh-beige);
+    color: var(--vh-beige);
+    text-decoration: none;
+  }
+
+  /* ── BADGE ── */
+  .vh-hero__badge {
+    opacity: 0;
+    animation: vh-fadeIn 1.2s 1.2s ease forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .vh-badge-ring {
+    width: {{ section.settings.badge_size }}px;
+    height: {{ section.settings.badge_size }}px;
+    border-radius: 50%;
+    border: 1px solid var(--vh-badge-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    gap: 0.2rem;
+    backdrop-filter: blur(8px);
+    background: var(--vh-badge-bg);
+  }
+  .vh-badge-ring__day {
+    font-size: {{ section.settings.badge_day_size | divided_by: 10.0 }}rem;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1;
+  }
+  .vh-badge-ring__label {
+    font-size: {{ section.settings.badge_label_size | divided_by: 10.0 }}rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vh-beige);
+    line-height: 1.3;
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .vh-hero__scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: vh-fadeIn 1s 1.5s ease forwards;
+  }
+  {% unless section.settings.show_scroll_indicator %}
+  .vh-hero__scroll { display: none; }
+  {% endunless %}
+
+  .vh-scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6), transparent);
+    animation: vh-scrollPulse 2s ease-in-out infinite;
+  }
+  .vh-scroll-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ── MUTE BUTTON ── */
+  .vh-mute-btn {
+    position: absolute;
+    bottom: 2.5rem;
+    right: var(--vh-padding-x);
+    z-index: 10;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    transition: background 0.2s;
+    font-size: 1rem;
+  }
+  .vh-mute-btn:hover { background: rgba(255,255,255,0.22); }
+  {% unless section.settings.show_mute_button %}
+  .vh-mute-btn { display: none; }
+  {% endunless %}
+
+  /* ── KEYFRAMES ── */
+  @keyframes vh-fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes vh-fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes vh-scrollPulse {
+    0%,100% { opacity: 0.6; transform: scaleY(1); }
+    50%      { opacity: 1;   transform: scaleY(1.15); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .vh-hero__content { grid-template-columns: 1fr; }
+    .vh-hero__badge   { display: none; }
+  }
+</style>
+
+<section class="vh-hero" id="vh-hero-{{ section_id }}">
+
+  {% if section.settings.show_announcement and section.settings.announcement_text != blank %}
+  <div class="vh-announcement">
+    {{ section.settings.announcement_text }}
+  </div>
+  {% endif %}
+
+  <video
+    class="vh-hero__video"
+    autoplay
+    muted
+    loop
+    playsinline
+    id="vh-video-{{ section_id }}"
+    src="{{ vid_url }}"
+  ></video>
+
+  <div class="vh-hero__overlay"></div>
+  <div class="vh-hero__grain"></div>
+
+  <div class="vh-hero__content">
+    <div>
+      {% if section.settings.eyebrow_text != blank %}
+      <p class="vh-hero__eyebrow">{{ section.settings.eyebrow_text }}</p>
+      {% endif %}
+
+      {% if section.settings.title != blank %}
+      <h1 class="vh-hero__title">{{ section.settings.title }}</h1>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+      <p class="vh-hero__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+
+      <div class="vh-hero__actions">
+        {% if section.settings.btn_primary_text != blank %}
+        <a
+          href="{{ section.settings.btn_primary_url }}"
+          class="vh-btn-primary button button--filled uppercase"
+        >
+          {{ section.settings.btn_primary_text }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        {% endif %}
+
+        {% if section.settings.btn_ghost_text != blank %}
+        <a
+          href="{{ section.settings.btn_ghost_url }}"
+          class="vh-btn-ghost"
+        >
+          {{ section.settings.btn_ghost_text }}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if section.settings.show_badges %}
+    <div class="vh-hero__badge">
+      {% if section.settings.badge_1_day != blank %}
+      <div class="vh-badge-ring">
+        <span class="vh-badge-ring__day">{{ section.settings.badge_1_day }}</span>
+        <span class="vh-badge-ring__label">{{ section.settings.badge_1_label }}</span>
+      </div>
+      {% endif %}
+      {% if section.settings.badge_2_day != blank %}
+      <div class="vh-badge-ring">
+        <span class="vh-badge-ring__day">{{ section.settings.badge_2_day }}</span>
+        <span class="vh-badge-ring__label">{{ section.settings.badge_2_label }}</span>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_scroll_indicator %}
+  <div class="vh-hero__scroll">
+    {% comment %} <span class="vh-scroll-label">Scroll</span> {% endcomment %}
+    <div class="vh-scroll-line"></div>
+  </div>
+  {% endif %}
+
+  {% if section.settings.show_mute_button %}
+  <button
+    class="vh-mute-btn"
+    id="vh-mute-{{ section_id }}"
+    onclick="vhToggleMute('{{ section_id }}')"
+    title="Toggle sound"
+  >🔇</button>
+  {% endif %}
+
+</section>
+
+<script>
+  function vhToggleMute(id) {
+    var v = document.getElementById('vh-video-' + id);
+    var b = document.getElementById('vh-mute-'  + id);
+    v.muted = !v.muted;
+    b.textContent = v.muted ? '🔇' : '🔊';
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "tag": "section",
+  "class": "section-video-hero",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "📹 Video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "default": "https://cdn.shopify.com/videos/c/o/v/5cf0858e2f8f4add99330fb49a1a96fb.mov",
+      "info": "Paste a direct .mp4 or .mov URL (Shopify CDN, Vimeo direct, etc.)"
+    },
+    {
+      "type": "range",
+      "id": "video_brightness",
+      "label": "Video Brightness",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "default": 72,
+      "unit": "%"
+    },
+
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 3840,
+      "step": 80,
+      "default": 3840,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum Height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "default": 600,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Horizontal Padding",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "default": 6,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 7,
+      "unit": "vh"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Intensity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 100,
+      "unit": "%"
+    },
+
+    {
+      "type": "header",
+      "content": "📢 Announcement Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement Bar",
+      "default": true
+    },
+    {
+      "type": "html",
+      "id": "announcement_text",
+      "label": "Announcement HTML",
+      "default": "🟠 &nbsp;Weekly Menu is Live — <strong>Order by Friday 5 PM</strong> for Tuesday Delivery"
+    },
+    {
+      "type": "color",
+      "id": "announce_bg",
+      "label": "Announcement Background",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "announce_color",
+      "label": "Announcement Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "announce_highlight",
+      "label": "Announcement Highlight Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "range",
+      "id": "announce_size",
+      "label": "Announcement Font Size (×10 = rem)",
+      "min": 6,
+      "max": 12,
+      "step": 1,
+      "default": 8,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 8 = 0.8rem"
+    },
+
+    {
+      "type": "header",
+      "content": "✍️ Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text",
+      "default": "Fresh · Local · Weekly"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Headline",
+      "default": "<p>Provisions<br/><em>from our</em><br/>Kitchen.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Chef-crafted meals delivered to your door every Tuesday. Order by Friday — and let us take care of the rest."
+    },
+
+    {
+      "type": "header",
+      "content": "🔡 Typography"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow Font Size (×10 = rem)",
+      "min": 5,
+      "max": 12,
+      "step": 1,
+      "default": 7,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 7 = 0.7rem"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title Size (vw)",
+      "min": 3,
+      "max": 14,
+      "step": 0.5,
+      "default": 8,
+      "unit": "vw"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle Font Size (×10 = rem)",
+      "min": 8,
+      "max": 15,
+      "step": 1,
+      "default": 11,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 11 = 1.1rem"
+    },
+
+    {
+      "type": "header",
+      "content": "🎨 Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_teal",
+      "label": "Brand Teal (overlay)",
+      "default": "#036774"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Accent / Orange",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "color_beige",
+      "label": "Beige",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "color_dark",
+      "label": "Dark (overlay)",
+      "default": "#1a1a18"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_italic_color",
+      "label": "Title Italic Color",
+      "default": "#c6c3b8"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow Color",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#ffffffbf"
+    },
+
+    {
+      "type": "header",
+      "content": "🔘 Buttons"
+    },
+    {
+      "type": "text",
+      "id": "btn_primary_text",
+      "label": "Primary Button Label",
+      "default": "Order This Week's Menu"
+    },
+    {
+      "type": "url",
+      "id": "btn_primary_url",
+      "label": "Primary Button URL"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg",
+      "label": "Primary Button Background",
+      "default": "#ed7009"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg_hover",
+      "label": "Primary Button Hover Background",
+      "default": "#d4610a"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_color",
+      "label": "Primary Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "btn_ghost_text",
+      "label": "Ghost Button Label",
+      "default": "How it Works"
+    },
+    {
+      "type": "url",
+      "id": "btn_ghost_url",
+      "label": "Ghost Button URL"
+    },
+    {
+      "type": "color",
+      "id": "btn_ghost_color",
+      "label": "Ghost Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_ghost_border",
+      "label": "Ghost Button Border Color",
+      "default": "#ffffff59"
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button Font Size (×10 = rem)",
+      "min": 7,
+      "max": 12,
+      "step": 1,
+      "default": 9,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 9 = 0.9rem"
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_x",
+      "label": "Button Padding X (×10 = rem)",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "default": 20,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 20 = 2rem"
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_y",
+      "label": "Button Padding Y (×10 = rem)",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 10,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 10 = 1rem"
+    },
+    {
+      "type": "range",
+      "id": "btn_radius",
+      "label": "Button Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
+    },
+
+    {
+      "type": "header",
+      "content": "🏅 Delivery Badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show Delivery Badges",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge Diameter",
+      "min": 80,
+      "max": 180,
+      "step": 10,
+      "default": 120,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg",
+      "label": "Badge Background",
+      "default": "#0367742e"
+    },
+    {
+      "type": "color",
+      "id": "badge_border",
+      "label": "Badge Border Color",
+      "default": "#c6c3b859"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_day",
+      "label": "Badge 1 — Day Label",
+      "default": "Tue"
+    },
+    {
+      "type": "text",
+      "id": "badge_1_label",
+      "label": "Badge 1 — Sub Label",
+      "default": "Weekly\nDelivery"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_day",
+      "label": "Badge 2 — Day Label",
+      "default": "Fri"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_label",
+      "label": "Badge 2 — Sub Label",
+      "default": "Order\nCutoff"
+    },
+    {
+      "type": "range",
+      "id": "badge_day_size",
+      "label": "Badge Day Font Size (×10 = rem)",
+      "min": 10,
+      "max": 35,
+      "step": 1,
+      "default": 19,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 19 = 1.9rem"
+    },
+    {
+      "type": "range",
+      "id": "badge_label_size",
+      "label": "Badge Label Font Size (×10 = rem)",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "default": 6,
+      "unit": "r10",
+      "info": "Value ÷ 10 = rem. E.g. 6 = 0.6rem"
+    },
+
+    {
+      "type": "header",
+      "content": "🎛️ UI Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show Scroll Indicator",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mute_button",
+      "label": "Show Mute Button",
+      "default": true
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Video Hero",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}
