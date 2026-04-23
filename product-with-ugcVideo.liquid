@@ -1,0 +1,1264 @@
+{{- 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css' | stylesheet_tag -}}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+
+<style>
+  /* ── Scoped section reset ────────────────────────────────────────────── */
+  .evs-{{ section.id }} *,
+  .evs-{{ section.id }} *::before,
+  .evs-{{ section.id }} *::after { box-sizing: border-box; }
+
+  /* ── Outer padding wrapper ───────────────────────────────────────────── */
+  .evs-padding-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    {% if section.settings.section_bg_color != blank %}
+      background-color: {{ section.settings.section_bg_color }};
+    {% endif %}
+  }
+  @media (min-width: 750px) {
+    .evs-padding-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* ── Container ───────────────────────────────────────────────────────── */
+  .evs-container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* ── Heading block ───────────────────────────────────────────────────── */
+  .evs-title-{{ section.id }} {
+    font-weight: 700;
+    line-height: 1.2;
+    margin: {{ section.settings.title_margin_top }}px 0 {{ section.settings.title_margin_bottom }}px;
+    font-size: {{ section.settings.title_font_size | times: 0.72 | round: 0 }}px;
+    color: {{ section.settings.title_color }};
+    text-align: {{ section.settings.title_alignment }};
+  }
+  @media (min-width: 750px) {
+    .evs-title-{{ section.id }} {
+      font-size: {{ section.settings.title_font_size }}px;
+    }
+  }
+
+  .evs-subheading-{{ section.id }} {
+    font-size: {{ section.settings.subheading_font_size | times: 0.875 | round: 0 }}px;
+    text-align: {{ section.settings.subheading_alignment }};
+    margin-top: {{ section.settings.subheading_margin_top }}px;
+    margin-bottom: 0;
+    {% if section.settings.subheading_color != blank %}
+      color: {{ section.settings.subheading_color }};
+    {% endif %}
+  }
+  @media (min-width: 750px) {
+    .evs-subheading-{{ section.id }} {
+      font-size: {{ section.settings.subheading_font_size }}px;
+    }
+
+  }
+
+  /* ── Slider title ────────────────────────────────────────────────────── */
+  .evs-slider-title-{{ section.id }} {
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.6px;
+    text-align: {{ section.settings.video_title_alignment }};
+    margin: {{ section.settings.video_title_margin_top }}px 0 30px;
+    font-size: {{ section.settings.slider_title_font_size | times: 0.72 | round: 0 }}px;
+    {% if section.settings.slider_title_color != blank %}
+      color: {{ section.settings.slider_title_color }};
+    {% endif %}
+  }
+  @media (min-width: 750px) {
+    .evs-slider-title-{{ section.id }} {
+      font-size: {{ section.settings.slider_title_font_size }}px;
+    }
+  }
+
+  /* ── Swiper outer shell — clips slides but NOT the nav buttons ──────── */
+  .evs-swiper-shell-{{ section.id }} {
+    position: relative;
+    /* Horizontal clip keeps slides from overflowing the page edge,
+       but does NOT clip children on the Y axis — so nav buttons
+       that are centred vertically stay fully visible. */
+    overflow-x: clip;   /* modern browsers */
+    overflow-y: visible;
+    padding: 0 {{ section.settings.nav_btn_size | divided_by: 2 | round: 0 }}px; /* room for half-outside buttons */
+  }
+
+  /* ── Swiper inner element — must be overflow:hidden for Swiper to work ── */
+  .evs-swiper-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  /* Swiper internal wrapper — DO NOT add gap here; Swiper uses spaceBetween */
+  .evs-swiper-{{ section.id }} .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .evs-swiper-{{ section.id }} .swiper-slide {
+    height: auto;
+  }
+
+  /* ── Video card ──────────────────────────────────────────────────────── */
+  .evs-card-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ section.settings.card_border_radius }}px;
+    border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+    width: 100%;
+    height: 100%;
+    display: block;
+    {% if section.settings.card_bg_color != blank %}
+      background-color: {{ section.settings.card_bg_color }};
+    {% else %}
+      background-color: #000;
+    {% endif %}
+    {% if section.settings.card_shadow %}
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    {% endif %}
+  }
+
+  /* ── Video wrapper / aspect ratio ───────────────────────────────────── */
+  .evs-video-wrapper-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.card_aspect_ratio }};
+    overflow: hidden;
+    background: #000;
+  }
+
+  .evs-video-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* ── Play button ─────────────────────────────────────────────────────── */
+  .evs-play-btn-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    cursor: pointer;
+    width: {{ section.settings.play_btn_size }}px;
+    height: {{ section.settings.play_btn_size }}px;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .evs-play-btn-{{ section.id }}:hover {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .evs-play-btn-{{ section.id }}.is-playing {
+    display: none;
+  }
+
+  /* ── Card gradient overlay ───────────────────────────────────────────── */
+  .evs-gradient-{{ section.id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: {{ section.settings.card_padding }}px;
+    z-index: 2;
+    background: linear-gradient(
+      360deg,
+      {{ section.settings.card_gradient_color }} {{ section.settings.gradient_start_pct }}%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ── Product link inside card ────────────────────────────────────────── */
+  .evs-product-link-{{ section.id }} {
+    background: rgba(249,246,240,0.12);
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border-radius: {{ section.settings.product_link_radius }}px;
+    padding: 6px;
+    text-decoration: none;
+    color: #fff;
+    pointer-events: all;
+    transition: background 0.2s ease;
+  }
+  .evs-product-link-{{ section.id }}:hover {
+    background: rgba(249,246,240,0.22);
+  }
+  .evs-product-img-wrap-{{ section.id }} {
+    flex-shrink: 0;
+    width: {{ section.settings.product_img_size }}px;
+    height: {{ section.settings.product_img_size }}px;
+    border-radius: {{ section.settings.product_img_radius }}px;
+    overflow: hidden;
+  }
+  .evs-product-img-wrap-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .evs-product-title-{{ section.id }} {
+    font-weight: 600;
+    font-size: {{ section.settings.product_title_size }}px;
+    line-height: 1.3;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin: 0 0 4px;
+  }
+  .evs-product-price-{{ section.id }} {
+    font-weight: 400;
+    font-size: {{ section.settings.product_price_size }}px;
+    line-height: 1;
+    color: #fff;
+    margin: 0;
+  }
+
+  /* ── Nav buttons ─────────────────────────────────────────────────────── */
+  .evs-nav-btn-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border: 1px solid {{ section.settings.nav_btn_border_color }};
+    box-shadow: 0 4px 8px rgba(0,0,0,0.14);
+    width: {{ section.settings.nav_btn_size }}px;
+    height: {{ section.settings.nav_btn_size }}px;
+    border-radius: 100px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ section.settings.nav_btn_bg_color }};
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+  .evs-nav-btn-{{ section.id }}:hover {
+    background: {{ section.settings.nav_btn_hover_color }};
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
+  .evs-nav-btn-{{ section.id }} svg path {
+    stroke: {{ section.settings.nav_btn_icon_color }};
+  }
+  /* Nav buttons live on the shell; align to the shell's padded edges */
+  .evs-nav-prev-{{ section.id }} { left: 0; }
+  .evs-nav-next-{{ section.id }} { right: 0; }
+
+  /* Hide Swiper default arrows (we use custom ones) */
+  .evs-swiper-{{ section.id }} .swiper-button-next,
+  .evs-swiper-{{ section.id }} .swiper-button-prev { display: none !important; }
+
+  /* Disabled state for nav buttons */
+  .evs-nav-btn-{{ section.id }}.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* ── Pagination dots ─────────────────────────────────────────────────── */
+  {% if section.settings.show_pagination %}
+  .evs-pagination-{{ section.id }} {
+    text-align: center;
+    margin-top: 16px;
+  }
+  .evs-pagination-{{ section.id }} .swiper-pagination-bullet {
+    background: {{ section.settings.pagination_color }};
+    opacity: 0.4;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .evs-pagination-{{ section.id }} .swiper-pagination-bullet-active {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  {% endif %}
+
+  /* ── Scrollbar ───────────────────────────────────────────────────────── */
+  {% if section.settings.show_scrollbar %}
+  .evs-scrollbar-{{ section.id }} {
+    margin-top: 12px;
+    height: 4px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .evs-scrollbar-{{ section.id }} .swiper-scrollbar-drag {
+    background: {{ section.settings.scrollbar_color }};
+    border-radius: 2px;
+    height: 100%;
+  }
+  {% endif %}
+
+  /* ── Autoplay progress ring ──────────────────────────────────────────── */
+  {% if section.settings.autoplay_enable %}
+  .evs-autoplay-progress-{{ section.id }} {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .evs-autoplay-progress-{{ section.id }} svg {
+    --progress: 0;
+    position: absolute;
+    left: 0; top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    stroke-width: 3px;
+    stroke: {{ section.settings.nav_btn_bg_color }};
+    fill: none;
+    stroke-dashoffset: calc(125.6px * (1 - var(--progress)));
+    stroke-dasharray: 125.6;
+    transform: rotate(-90deg);
+  }
+  {% endif %}
+
+  /* ── Responsive: hide nav on very small screens ──────────────────────── */
+  {% comment %} @media (max-width: 479px) {
+    .evs-nav-btn-{{ section.id }} { display: none; }
+  } {% endcomment %}
+
+  @media (max-width: 768px){
+  
+  /* ── Swiper outer shell — clips slides but NOT the nav buttons ──────── */
+  .evs-swiper-shell-{{ section.id }} {
+    padding: 0px !important;
+  }
+
+    .evs-container-{{ section.id }} {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
+  .evs-padding-{{ section.id }} {
+      padding-top: 40px !important;
+      padding-bottom: 80px !important;
+    }
+
+  .evs-nav-btn-{{ section.id }} {
+    bottom: -60px !important;
+    top: unset !important;
+  }
+
+  .evs-nav-prev-{{ section.id }} {
+  left: 50%;
+  transform: translateX(-120%); /* move left */
+}
+
+.evs-nav-next-{{ section.id }} {
+  left: 50%;
+  transform: translateX(20%); /* move right */
+}
+
+
+  }
+
+</style>
+
+<div class="evs-{{ section.id }} evs-padding-{{ section.id }}">
+  <div class="evs-container-{{ section.id }}">
+
+    {%- comment -%} ── Heading block ── {%- endcomment -%}
+    {% if section.settings.title != blank or section.settings.sub_heading != blank %}
+      <div style="margin-bottom: {{ section.settings.heading_block_margin_bottom }}px;">
+        {% if section.settings.title != blank %}
+          <h2 class="evs-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.sub_heading != blank %}
+          <p class="evs-subheading-{{ section.id }} inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+            {{ section.settings.sub_heading }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} ── Video slider ── {%- endcomment -%}
+    {% if section.blocks.size > 0 %}
+      <div>
+        {% if section.settings.video_slider_title != blank %}
+          <p class="evs-slider-title-{{ section.id }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+            {{ section.settings.video_slider_title }}
+          </p>
+        {% endif %}
+
+        {{- '<!-- evs shell -->' -}}
+        <div class="evs-swiper-shell-{{ section.id }}">
+
+          <div class="evs-swiper-{{ section.id }} swiper" id="evs-swiper-{{ section.id }}">
+            <div class="swiper-wrapper">
+              {%- for block in section.blocks -%}
+                {%- assign has_video = false -%}
+                {%- if block.settings.video != blank or block.settings.video_url != blank -%}
+                  {%- assign has_video = true -%}
+                {%- endif -%}
+
+                <div class="swiper-slide" {{ block.shopify_attributes }}>
+                  <div class="evs-card-{{ section.id }}">
+                    <div class="evs-video-wrapper-{{ section.id }}">
+                      {%- if block.settings.video != blank -%}
+                        <video
+                          class="evs-video-{{ section.id }}"
+                          src="{{ block.settings.video.sources[1].url | default: block.settings.video.sources[0].url }}"
+                          loop
+                          playsinline
+                          preload="{{ section.settings.video_preload }}"
+                          poster="{{ block.settings.video.preview_image | image_url: width: 800 }}"
+                          aria-label="{{ block.settings.video_aria_label | default: 'Product video' }}"
+                        ></video>
+                      {%- elsif block.settings.video_url != blank -%}
+                        <video
+                          class="evs-video-{{ section.id }}"
+                          src="{{ block.settings.video_url }}"
+                          loop
+                          playsinline
+                          preload="{{ section.settings.video_preload }}"
+                          {%- if block.settings.video_poster != blank %}
+                            poster="{{ block.settings.video_poster | image_url: width: 800 }}"
+                          {%- endif %}
+                          aria-label="{{ block.settings.video_aria_label | default: 'Product video' }}"
+                        ></video>
+                      {%- endif -%}
+                    </div>
+
+                    {%- if has_video -%}
+                      <button
+                        class="evs-play-btn-{{ section.id }} evs-play-toggle"
+                        aria-label="Play video"
+                        type="button"
+                      >
+                        <svg
+                          width="{{ section.settings.play_btn_size }}"
+                          height="{{ section.settings.play_btn_size }}"
+                          viewBox="0 0 49 48"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M24.5 4C20.5444 4 16.6776 5.17298 13.3886 7.37061C10.0996 9.56824 7.53617 12.6918 6.02242 16.3463C4.50867 20.0009 4.1126 24.0222 4.8843 27.9018C5.65601 31.7814 7.56082 35.3451 10.3579 38.1421C13.1549 40.9392 16.7186 42.844 20.5982 43.6157C24.4778 44.3874 28.4992 43.9913 32.1537 42.4776C35.8082 40.9638 38.9318 38.4004 41.1294 35.1114C43.327 31.8224 44.5 27.9556 44.5 24C44.5 21.3736 43.9827 18.7728 42.9776 16.3463C41.9725 13.9198 40.4993 11.715 38.6421 9.85786C36.785 8.00069 34.5802 6.5275 32.1537 5.52241C29.7272 4.51732 27.1264 4 24.5 4ZM20.5 33V15L32.5 24L20.5 33Z"
+                            fill="{{ section.settings.play_btn_color }}"
+                          />
+                        </svg>
+                      </button>
+                    {%- endif -%}
+
+                    <div class="evs-gradient-{{ section.id }}">
+                      {%- if block.settings.product != blank -%}
+                        <a
+                          href="{{ block.settings.product.url }}"
+                          class="evs-product-link-{{ section.id }}"
+                          aria-label="View {{ block.settings.product.title }}"
+                        >
+                          {%- if block.settings.product.featured_image != blank -%}
+                            <div class="evs-product-img-wrap-{{ section.id }}">
+                              {{ block.settings.product.featured_image
+                                | image_url: width: 80, height: 80
+                                | image_tag: loading: 'lazy', alt: block.settings.product.title }}
+                            </div>
+                          {%- endif -%}
+                          <div>
+                            <p class="evs-product-title-{{ section.id }}">{{ block.settings.product.title }}</p>
+                            <p class="evs-product-price-{{ section.id }}">{{ block.settings.product.price | money }}</p>
+                          </div>
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+
+            {% if section.settings.show_pagination %}
+              <div class="evs-pagination-{{ section.id }}" id="evs-pagination-{{ section.id }}"></div>
+            {% endif %}
+          </div>
+
+          {% comment %}
+            Nav buttons are OUTSIDE the swiper div (so its overflow:hidden won't clip them)
+            but INSIDE the shell (which is position:relative, so absolute positioning works).
+          {% endcomment %}
+          {% if section.settings.show_nav_buttons %}
+            <div class="evs-nav-btn-{{ section.id }} evs-nav-prev-{{ section.id }}" id="evs-prev-{{ section.id }}" role="button" aria-label="Previous slide" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="m14.025 7.02-5.007 4.993 4.992 5.008" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="evs-nav-btn-{{ section.id }} evs-nav-next-{{ section.id }}" id="evs-next-{{ section.id }}" role="button" aria-label="Next slide" tabindex="0">
+              <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="m10.01 7.02 5.008 4.993-4.993 5.008" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          {% endif %}
+
+        </div>
+
+        {% if section.settings.show_scrollbar %}
+          <div class="evs-scrollbar-{{ section.id }}" id="evs-scrollbar-{{ section.id }}">
+            <div class="swiper-scrollbar-drag"></div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var SECTION_ID  = '{{ section.id }}';
+  var SWIPER_SEL  = '#evs-swiper-' + SECTION_ID;
+  var PREV_SEL    = '#evs-prev-'   + SECTION_ID;
+  var NEXT_SEL    = '#evs-next-'   + SECTION_ID;
+  var PAG_SEL     = '#evs-pagination-' + SECTION_ID;
+  var SB_SEL      = '#evs-scrollbar-' + SECTION_ID;
+
+  // ── Settings from Liquid ──────────────────────────────────────────────
+  var settings = {
+    slidesMobile:   {{ section.settings.slides_mobile }},
+    slidesTablet:   {{ section.settings.slides_tablet }},
+    slidesDesktop:  {{ section.settings.slides_desktop }},
+    cardGap:        {{ section.settings.card_gap }},
+    loop:           {{ section.settings.loop_slider }},
+    centeredSlides: {{ section.settings.centered_slides }},
+    showPagination: {{ section.settings.show_pagination }},
+    showScrollbar:  {{ section.settings.show_scrollbar }},
+    autoplay:       {{ section.settings.autoplay_enable }},
+    autoplayDelay:  {{ section.settings.autoplay_delay }},
+    speed:          {{ section.settings.slide_speed }},
+    effect:         '{{ section.settings.slide_effect }}',
+    grabCursor:     {{ section.settings.grab_cursor }},
+    freeMode:       {{ section.settings.free_mode }},
+    pauseOnHover:   {{ section.settings.autoplay_pause_on_hover }},
+  };
+
+  // ── Wait for Swiper to be ready ───────────────────────────────────────
+  function initWhenReady() {
+    if (typeof Swiper === 'undefined') {
+      // Swiper script might not have executed yet — poll briefly
+      var tries = 0;
+      var poll  = setInterval(function () {
+        tries++;
+        if (typeof Swiper !== 'undefined') {
+          clearInterval(poll);
+          boot();
+        } else if (tries > 50) {
+          clearInterval(poll);
+          console.warn('[EVS] Swiper library not found after waiting.');
+        }
+      }, 100);
+    } else {
+      boot();
+    }
+  }
+
+  function boot() {
+    var swiperEl = document.querySelector(SWIPER_SEL);
+    if (!swiperEl) return;
+
+    // ── Build Swiper config ─────────────────────────────────────────────
+    var swiperConfig = {
+      slidesPerView:  settings.slidesMobile,
+      spaceBetween:   settings.cardGap,
+      loop:           settings.loop,
+      centeredSlides: settings.centeredSlides,
+      speed:          settings.speed,
+      grabCursor:     settings.grabCursor,
+      watchOverflow:  true,
+
+      breakpoints: {
+        750: {
+          slidesPerView: settings.slidesTablet,
+          spaceBetween:  settings.cardGap,
+        },
+        1024: {
+          slidesPerView: settings.slidesDesktop,
+          spaceBetween:  settings.cardGap,
+        },
+      },
+
+      navigation: {
+        nextEl: document.querySelector(NEXT_SEL),
+        prevEl: document.querySelector(PREV_SEL),
+      },
+    };
+
+    // Pagination
+    if (settings.showPagination) {
+      var pagEl = document.querySelector(PAG_SEL);
+      if (pagEl) {
+        swiperConfig.pagination = {
+          el:        pagEl,
+          clickable: true,
+        };
+      }
+    }
+
+    // Scrollbar
+    if (settings.showScrollbar) {
+      var sbEl = document.querySelector(SB_SEL);
+      if (sbEl) {
+        swiperConfig.scrollbar = {
+          el:           sbEl,
+          draggable:    true,
+          snapOnRelease: false,
+        };
+      }
+    }
+
+    // Free mode
+    if (settings.freeMode) {
+      swiperConfig.freeMode = { enabled: true, sticky: false };
+    }
+
+    // Autoplay
+    if (settings.autoplay) {
+      swiperConfig.autoplay = {
+        delay:                settings.autoplayDelay,
+        disableOnInteraction: false,
+        pauseOnMouseEnter:    settings.pauseOnHover,
+      };
+    }
+
+    // Fade effect
+    if (settings.effect === 'fade') {
+      swiperConfig.effect      = 'fade';
+      swiperConfig.fadeEffect   = { crossFade: true };
+    }
+
+    var swiper = new Swiper(swiperEl, swiperConfig);
+
+    // ── Keyboard nav for custom buttons ──────────────────────────────────
+    [PREV_SEL, NEXT_SEL].forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (!el) return;
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          el.click();
+        }
+      });
+    });
+
+    // ── Video play / pause ────────────────────────────────────────────────
+    swiperEl.addEventListener('click', function (e) {
+      var btn   = e.target.closest('.evs-play-toggle');
+      var video = e.target.tagName === 'VIDEO' ? e.target : null;
+
+      if (!btn && !video) return;
+
+      var card = (btn || video).closest('.evs-card-' + SECTION_ID);
+      if (!card) return;
+
+      var cardVideo = card.querySelector('video');
+      var cardBtn   = card.querySelector('.evs-play-toggle');
+
+      if (!cardVideo) return;
+
+      if (cardVideo.paused) {
+        var p = cardVideo.play();
+        if (p && p.catch) p.catch(function () { /* autoplay blocked */ });
+      } else {
+        cardVideo.pause();
+      }
+    });
+
+    // Sync play button visibility via event delegation (capture phase)
+    swiperEl.addEventListener('play', function (e) {
+      if (e.target.tagName !== 'VIDEO') return;
+      var card = e.target.closest('.evs-card-' + SECTION_ID);
+      var btn  = card && card.querySelector('.evs-play-toggle');
+      if (btn) btn.classList.add('is-playing');
+    }, true);
+
+    swiperEl.addEventListener('pause', function (e) {
+      if (e.target.tagName !== 'VIDEO') return;
+      var card = e.target.closest('.evs-card-' + SECTION_ID);
+      var btn  = card && card.querySelector('.evs-play-toggle');
+      if (btn) btn.classList.remove('is-playing');
+    }, true);
+
+    swiperEl.addEventListener('ended', function (e) {
+      if (e.target.tagName !== 'VIDEO') return;
+      var card = e.target.closest('.evs-card-' + SECTION_ID);
+      var btn  = card && card.querySelector('.evs-play-toggle');
+      if (btn) btn.classList.remove('is-playing');
+    }, true);
+
+    // Pause videos when slide changes (avoids off-screen audio)
+    swiper.on('slideChangeTransitionStart', function () {
+      swiperEl.querySelectorAll('video').forEach(function (v) {
+        if (!v.paused) v.pause();
+      });
+    });
+  }
+
+  // Kick off after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWhenReady);
+  } else {
+    initWhenReady();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product with Video",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+
+    { "type": "header", "content": "── Title ──────────────────────────" },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Christmas Sparkle: Special Holiday Beads Collection",
+      "label": "Title"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#000d29"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 16, "max": 60, "step": 2, "unit": "px",
+      "label": "Title Font Size",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Title Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Title Margin Bottom",
+      "default": 8
+    },
+
+    { "type": "header", "content": "── Sub Heading ─────────────────────" },
+    {
+      "type": "inline_richtext",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "Celebrate the warmth of Christmas with our sparkling holiday-themed beads!"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Sub Heading Color",
+      "default": "#555555"
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size",
+      "min": 12, "max": 28, "step": 1, "unit": "px",
+      "label": "Sub Heading Font Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "subheading_alignment",
+      "label": "Sub Heading Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "subheading_margin_top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Sub Heading Margin Top",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "heading_block_margin_bottom",
+      "min": 0, "max": 80, "step": 4, "unit": "px",
+      "label": "Heading Block Bottom Spacing",
+      "default": 24
+    },
+
+    { "type": "header", "content": "── Video Slider Title ──────────────" },
+    {
+      "type": "text",
+      "id": "video_slider_title",
+      "default": "What do they say about our christmas collection?",
+      "label": "Video Slider Title"
+    },
+    {
+      "type": "color",
+      "id": "slider_title_color",
+      "label": "Slider Title Color",
+      "default": "#212121"
+    },
+    {
+      "type": "range",
+      "id": "slider_title_font_size",
+      "min": 16, "max": 48, "step": 2, "unit": "px",
+      "label": "Slider Title Font Size",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "video_title_alignment",
+      "label": "Video Slider Title Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "video_title_margin_top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Video Slider Title Margin Top",
+      "default": 0
+    },
+
+    { "type": "header", "content": "── Slider Behaviour ────────────────" },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 4, "max": 60, "step": 4, "unit": "px",
+      "label": "Gap Between Cards",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "slides_mobile",
+      "min": 1, "max": 3, "step": 0.1,
+      "label": "Slides Visible – Mobile",
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "slides_tablet",
+      "min": 1, "max": 4, "step": 0.5,
+      "label": "Slides Visible – Tablet",
+      "default": 2.5
+    },
+    {
+      "type": "range",
+      "id": "slides_desktop",
+      "min": 1, "max": 6, "step": 1,
+      "label": "Slides Visible – Desktop",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "slide_speed",
+      "min": 100, "max": 1200, "step": 100, "unit": "ms",
+      "label": "Slide Transition Speed",
+      "default": 400
+    },
+    {
+      "type": "select",
+      "id": "slide_effect",
+      "label": "Slide Effect",
+      "options": [
+        { "value": "slide", "label": "Slide" },
+        { "value": "fade",  "label": "Fade (1 slide only)" }
+      ],
+      "default": "slide"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_slider",
+      "label": "Loop (infinite scroll)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "centered_slides",
+      "label": "Center Active Slide",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "grab_cursor",
+      "label": "Show Grab Cursor on Hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "free_mode",
+      "label": "Free Drag Mode (no snap)",
+      "default": false
+    },
+
+    { "type": "header", "content": "── Autoplay ────────────────────────" },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enable",
+      "label": "Enable Autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 1000, "max": 8000, "step": 500, "unit": "ms",
+      "label": "Autoplay Delay",
+      "default": 4000
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_pause_on_hover",
+      "label": "Pause Autoplay on Hover",
+      "default": true
+    },
+
+    { "type": "header", "content": "── Navigation ──────────────────────" },
+    {
+      "type": "checkbox",
+      "id": "show_nav_buttons",
+      "label": "Show Arrow Buttons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "nav_btn_size",
+      "min": 28, "max": 56, "step": 4, "unit": "px",
+      "label": "Arrow Button Size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_bg_color",
+      "label": "Arrow Button Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_hover_color",
+      "label": "Arrow Button Background (Hover)",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_border_color",
+      "label": "Arrow Button Border Color",
+      "default": "#e4e4e4"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_icon_color",
+      "label": "Arrow Button Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show Pagination Dots",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "pagination_color",
+      "label": "Pagination Dot Color",
+      "default": "#212121"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scrollbar",
+      "label": "Show Scrollbar",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_color",
+      "label": "Scrollbar Drag Color",
+      "default": "#212121"
+    },
+
+    { "type": "header", "content": "── Video Card ──────────────────────" },
+    {
+      "type": "select",
+      "id": "card_aspect_ratio",
+      "label": "Card Aspect Ratio",
+      "options": [
+        { "value": "9 / 16", "label": "9:16 (Tall Portrait)" },
+        { "value": "9 / 14",  "label": "9:14 (custom)" },
+        { "value": "3 / 4",  "label": "3:4 (Portrait)" },
+        { "value": "1 / 1",  "label": "1:1 (Square)" },
+        { "value": "4 / 3",  "label": "4:3 (Landscape)" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0, "max": 32, "step": 2, "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card Border Color",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0, "max": 4, "step": 1, "unit": "px",
+      "label": "Card Border Width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_shadow",
+      "label": "Show Card Shadow",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "card_gradient_color",
+      "label": "Card Bottom Gradient Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "gradient_start_pct",
+      "min": 0, "max": 60, "step": 2, "unit": "%",
+      "label": "Gradient Start (% from bottom)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 8, "max": 40, "step": 4, "unit": "px",
+      "label": "Card Gradient Padding",
+      "default": 16
+    },
+
+    { "type": "header", "content": "── Play Button ─────────────────────" },
+    {
+      "type": "range",
+      "id": "play_btn_size",
+      "min": 32, "max": 80, "step": 4, "unit": "px",
+      "label": "Play Button Size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "play_btn_color",
+      "label": "Play Button Color",
+      "default": "#ffffff"
+    },
+
+    { "type": "header", "content": "── Product Card ────────────────────" },
+    {
+      "type": "range",
+      "id": "product_img_size",
+      "min": 28, "max": 64, "step": 4, "unit": "px",
+      "label": "Product Image Size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "product_img_radius",
+      "min": 0, "max": 20, "step": 2, "unit": "px",
+      "label": "Product Image Radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "product_link_radius",
+      "min": 0, "max": 20, "step": 2, "unit": "px",
+      "label": "Product Link Pill Radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "min": 10, "max": 18, "step": 1, "unit": "px",
+      "label": "Product Title Font Size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "product_price_size",
+      "min": 10, "max": 18, "step": 1, "unit": "px",
+      "label": "Product Price Font Size",
+      "default": 13
+    },
+
+    { "type": "header", "content": "── Video Behaviour ─────────────────" },
+    {
+      "type": "select",
+      "id": "video_preload",
+      "label": "Video Preload Strategy",
+      "options": [
+        { "value": "none",     "label": "None (fastest page load)" },
+        { "value": "metadata", "label": "Metadata only" },
+        { "value": "auto",     "label": "Auto (preload full video)" }
+      ],
+      "default": "none"
+    },
+
+    { "type": "header", "content": "── Section Background ───────────────" },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+
+    { "type": "header", "content": "── Container ───────────────────────" },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800, "max": 1600, "step": 10, "unit": "px",
+      "label": "Container Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Container Margin Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Container Margin Bottom",
+      "default": 40
+    },
+
+    { "type": "header", "content": "── Section Padding ─────────────────" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0, "max": 100, "step": 4, "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "video_review",
+      "name": "Video Review",
+      "settings": [
+        { "type": "header", "content": "Video Source — pick one" },
+        {
+          "type": "paragraph",
+          "content": "Upload a video file OR paste a direct MP4 URL. Uploaded file takes priority if both are filled."
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Option 1 — Upload video file"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Option 2 — External video URL (direct MP4)",
+          "placeholder": "https://example.com/video.mp4"
+        },
+        {
+          "type": "image_picker",
+          "id": "video_poster",
+          "label": "Poster / Thumbnail",
+          "info": "Shown before video plays. Required for external URL videos."
+        },
+        {
+          "type": "text",
+          "id": "video_aria_label",
+          "label": "Video Accessibility Label",
+          "placeholder": "Product review video",
+          "info": "Describes the video for screen readers."
+        },
+        { "type": "header", "content": "Product" },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Product with UGC Video",
+      "blocks": [
+        { "type": "video_review" },
+        { "type": "video_review" },
+        { "type": "video_review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

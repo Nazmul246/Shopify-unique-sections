@@ -1,0 +1,632 @@
+{% comment %}
+  Baby Bottle Features Section
+  Dynamic section with full customization
+{% endcomment %}
+
+{% comment %} {{ 'section-baby-bottle-features.css' | asset_url | stylesheet_tag }} {% endcomment %}
+
+<div class="baby-bottle-features-section" 
+     style="
+       background-color: {{ section.settings.background_color }};
+       padding-top: {{ section.settings.padding_top }}px;
+       padding-bottom: {{ section.settings.padding_bottom }}px;
+     "
+     data-section-id="{{ section.id }}"
+     data-enable-animation="{{ section.settings.enable_animation }}">
+  <div class="container" style="max-width: {{ section.settings.max_width }}px;">
+    
+    {%- if section.settings.title != blank -%}
+      <h2 class="section-title {% if section.settings.enable_animation %}scroll-animate animate-fade-up{% endif %}" 
+          style="color: {{ section.settings.title_color }};">
+        {{ section.settings.title }}
+      </h2>
+    {%- endif -%}
+    
+    {%- if section.settings.subtitle != blank -%}
+      <p class="section-subtitle {% if section.settings.enable_animation %}scroll-animate animate-fade-up animation-delay-1{% endif %}" 
+         style="color: {{ section.settings.subtitle_color }};">
+        {{ section.settings.subtitle }}
+      </p>
+    {%- endif -%}
+
+    <div class="features-wrapper">
+      <!-- Left Features -->
+      <div class="features-column features-left">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.position == 'left' -%}
+            <div class="feature-item {% if section.settings.enable_animation %}scroll-animate animate-slide-right{% endif %}" 
+                 style="animation-delay: {{ forloop.index | times: 0.2 }}s;"
+                 {{ block.shopify_attributes }}>
+              <div class="feature-content">
+                <h3 class="feature-title" style="color: {{ block.settings.title_color }};">
+                  {{ block.settings.title }}
+                </h3>
+                <p class="feature-description" style="color: {{ block.settings.description_color }};">
+                  {{ block.settings.description }}
+                </p>
+              </div>
+              {%- if block.settings.icon != blank -%}
+                <div class="feature-icon">
+                  <img src="{{ block.settings.icon | img_url: '100x' }}" 
+                       alt="{{ block.settings.title }}"
+                       loading="lazy">
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- Center Image -->
+      <div class="features-center {% if section.settings.enable_animation %}scroll-animate animate-zoom-in{% endif %}">
+        {%- if section.settings.main_image != blank -%}
+          <img src="{{ section.settings.main_image | img_url: 'master' }}" 
+               alt="{{ section.settings.title }}"
+               class="main-product-image"
+               loading="lazy">
+        {%- else -%}
+          <div class="placeholder-image">
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Right Features -->
+      <div class="features-column features-right">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.position == 'right' -%}
+            <div class="feature-item {% if section.settings.enable_animation %}scroll-animate animate-slide-left{% endif %}" 
+                 style="animation-delay: {{ forloop.index | times: 0.2 }}s;"
+                 {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != blank -%}
+                <div class="feature-icon">
+                  <img src="{{ block.settings.icon | img_url: '100x' }}" 
+                       alt="{{ block.settings.title }}"
+                       loading="lazy">
+                </div>
+              {%- endif -%}
+              <div class="feature-content">
+                <h3 class="feature-title" style="color: {{ block.settings.title_color }};">
+                  {{ block.settings.title }}
+                </h3>
+                <p class="feature-description" style="color: {{ block.settings.description_color }};">
+                  {{ block.settings.description }}
+                </p>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.baby-bottle-features-section {
+  width: 100%;
+  overflow: hidden;
+}
+
+.baby-bottle-features-section .container {
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 50px;
+  opacity: 0.8;
+}
+
+.features-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.features-column {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.scroll-animate {
+  opacity: 0;
+}
+
+.scroll-animate.animated {
+  opacity: 1;
+}
+
+.features-left .feature-item {
+  flex-direction: row;
+  text-align: right;
+}
+
+.features-right .feature-item {
+  flex-direction: row-reverse;
+  text-align: left;
+}
+
+.feature-content {
+  flex: 1;
+}
+
+.feature-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.feature-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.feature-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.features-right .feature-item {
+    flex-direction: row;
+    text-align: left;
+}
+
+.feature-icon img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.features-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+}
+
+.scroll-animate.features-center {
+  opacity: 0;
+}
+
+.scroll-animate.features-center.animated {
+  opacity: 1;
+}
+
+.main-product-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.placeholder-image {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up.animated {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+.animate-slide-right.animated {
+  animation: slideRight 0.8s ease-out forwards;
+}
+
+.animate-slide-left.animated {
+  animation: slideLeft 0.8s ease-out forwards;
+}
+
+.animate-zoom-in.animated {
+  animation: zoomIn 1s ease-out forwards;
+}
+
+.animation-delay-1 {
+  animation-delay: 0.2s;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .features-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .features-center {
+    order: -1;
+    min-width: auto;
+  }
+
+  .features-left,
+  .features-right {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .features-left .feature-item,
+  .features-right .feature-item {
+    flex-direction: row-reverse;
+    text-align: left;
+  }
+
+  .features-column.features-right .features-left .feature-item, .features-right .feature-item {
+    flex-direction: row;
+    text-align: left;
+}
+
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+
+  .baby-bottle-features-section h2.section-title {
+    font-size: 32px;
+}
+
+.baby-bottle-features-section {
+    padding-bottom: 50px !important;
+}
+
+.baby-bottle-features-section .container {
+    padding: 0 10px !important;
+}
+
+  .feature-item {
+    gap: 30px;
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .feature-title {
+    font-size: 1rem;
+  }
+
+  .feature-description {
+    font-size: 0.813rem;
+  }
+
+  .features-column {
+    gap: 20px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Intersection Observer for scroll animations
+  function initScrollAnimations() {
+    const sections = document.querySelectorAll('.baby-bottle-features-section');
+    
+    sections.forEach(section => {
+      const enableAnimation = section.dataset.enableAnimation === 'true';
+      
+      if (!enableAnimation) return;
+
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const animatedElements = entry.target.querySelectorAll('.scroll-animate');
+            
+            animatedElements.forEach((el, index) => {
+              setTimeout(() => {
+                el.classList.add('animated');
+              }, index * 100);
+            });
+            
+            // Unobserve after animation to prevent re-triggering
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      observer.observe(section);
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  } else {
+    initScrollAnimations();
+  }
+
+  // Re-initialize for Shopify theme editor
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initScrollAnimations);
+    document.addEventListener('shopify:section:reorder', initScrollAnimations);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Features section icon",
+  "tag": "section",
+  "class": "section-baby-bottle-features",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Special Features Of Baby Bottles"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1a2b4a"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Our kids' scooter boasts a sturdy frame for safety"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Product Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum Width (px)",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable Animations",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left Side"
+            },
+            {
+              "value": "right",
+              "label": "Right Side"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color",
+          "default": "#1a2b4a"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "Feature description goes here."
+        },
+        {
+          "type": "color",
+          "id": "description_color",
+          "label": "Description Color",
+          "default": "#666666"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Feature Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features section icon image",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "title": "Anti-Colic Design",
+            "description": "Effectively reduces air intake during feeding to prevent gas and discomfort."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "title": "BPA-Free Materials",
+            "description": "Made from safe, non-toxic materials to ensure your baby's health and safety."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "title": "Easy-To-Clean",
+            "description": "Wide neck and dishwasher-safe components for hassle-free and convenient cleaning."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "title": "Lightweight Design",
+            "description": "Easy for both parents and babies to handle without added strain while being space-efficient."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "title": "Variable Flow Nipples",
+            "description": "Adjustable flow rates to perfectly suit your baby's natural feeding pace and needs."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "title": "Good Heat Resistance",
+            "description": "The baby bottle withstands high temperatures, ensuring safe use with warm liquids."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
