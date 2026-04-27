@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingredient & Formula Comparison</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --pink-50: #fdf4f7;
+  --pink-100: #FBEAF0;
+  --pink-200: #F4C0D1;
+  --pink-300: #ED93B1;
+  --pink-400: #D4537E;
+  --pink-600: #993356;
+  --pink-800: #72243E;
+  --cream: #FAF8F5;
+  --warm: #FFF9F6;
+  --dark: #160C10;
+  --text: #1E1015;
+  --text-mid: #6A4D58;
+  --text-muted: #B09AA8;
+  --border: rgba(180,130,150,0.15);
+  --border-md: rgba(180,130,150,0.28);
+  --green-bg: #EAF3DE;
+  --green-text: #3B6D11;
+  --amber-bg: #FAEEDA;
+  --amber-text: #854F0B;
+  --gray-bg: #F1EFE8;
+  --gray-text: #888780;
+  --teal: #1D9E75;
+  --purple: #7F77DD;
+  --r: 14px;
+  --r-sm: 8px;
+  --r-pill: 50px;
+}
+
+body {
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(150deg, #220D16 0%, #3D1224 55%, #160A0F 100%);
+  padding: 72px 32px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute;inset:0;
+  background: radial-gradient(ellipse 65% 55% at 50% -10%, rgba(212,83,126,.28) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero::after {
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background: linear-gradient(90deg, transparent, rgba(212,83,126,.4), transparent);
+}
+.hero-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--pink-400);
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 300;
+  color: #FAF0F4;
+  line-height: 1.08;
+  position: relative;
+  letter-spacing: -.01em;
+}
+.hero h1 em { font-style: italic; color: var(--pink-200); }
+.hero-desc {
+  margin-top: 14px;
+  font-size: 14px;
+  color: rgba(240,215,228,.5);
+  font-weight: 300;
+  letter-spacing: .03em;
+  position: relative;
+}
+.hero-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+  position: relative;
+}
+.hero-ornament span { width: 40px; height: 1px; background: rgba(212,83,126,.4); display:block; }
+.hero-ornament i { width: 5px; height: 5px; border-radius: 50%; background: var(--pink-400); opacity: .7; display:block; }
+
+/* ── WRAPPER ── */
+.wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.section-label::before {
+  content:'';
+  width: 3px; height: 18px;
+  background: var(--pink-400);
+  border-radius: 2px;
+  display: block;
+}
+.section-label span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── TABLE CARD ── */
+.table-card {
+  background: #fff;
+  border: 1px solid var(--border-md);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 2px 24px rgba(22,12,16,.06);
+}
+
+/* ── HEADER ROW ── */
+.tbl-head {
+  display: grid;
+  grid-template-columns: 190px repeat(3, 1fr);
+  border-bottom: 1px solid var(--border-md);
+}
+.tbl-head-empty { padding: 22px 20px; }
+.tbl-head-col {
+  padding: 20px 16px 18px;
+  text-align: center;
+  border-left: 1px solid var(--border);
+}
+.tbl-head-col.featured {
+  background: var(--pink-50);
+  border-left-color: rgba(212,83,126,.2);
+}
+.badge-featured {
+  display: inline-block;
+  background: var(--pink-100);
+  color: var(--pink-600);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  margin-bottom: 7px;
+}
+.col-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  display: block;
+  line-height: 1.1;
+}
+.col-name.pink { color: var(--pink-600); }
+.col-tier {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  display: block;
+}
+.col-tier.pink { color: rgba(212,83,126,.7); }
+.col-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  display: block;
+  margin-top: 8px;
+  color: var(--text);
+}
+.col-price.pink { color: var(--pink-600); }
+.col-price sup {
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  vertical-align: super;
+  color: inherit;
+}
+.col-price-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 1px;
+}
+
+/* ── SECTION DIVIDER ROWS ── */
+.tbl-section {
+  display: grid;
+  grid-template-columns: 190px repeat(3, 1fr);
+  background: #FAF8F5;
+  border-bottom: 1px solid var(--border);
+}
+.tbl-section-label {
+  grid-column: 1 / -1;
+  padding: 9px 20px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── DATA ROWS ── */
+.tbl-row {
+  display: grid;
+  grid-template-columns: 190px repeat(3, 1fr);
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.tbl-row:last-child { border-bottom: none; }
+.tbl-row:hover { background: #FFFCFD; }
+
+.tbl-row-label {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+.row-name {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 400;
+}
+.row-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.tbl-cell {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border);
+}
+.tbl-cell.featured {
+  background: var(--pink-50);
+  border-left-color: rgba(212,83,126,.12);
+}
+
+/* ── PILLS ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.pill-yes { background: var(--green-bg); color: var(--green-text); }
+.pill-no  { background: var(--gray-bg);  color: var(--gray-text);  }
+.pill-part{ background: var(--amber-bg); color: var(--amber-text); }
+.pill-pink{ background: var(--pink-100); color: var(--pink-600);   }
+.pill-icon { font-size: 11px; }
+
+/* ── SCORE RING ── */
+.score-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+.score-wrap svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+.score-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.score-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+}
+.score-num.pink { color: var(--pink-600); }
+.score-denom {
+  font-size: 9px;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* ── PERCENT BAR ── */
+.bar-wrap { display: flex; align-items: center; gap: 8px; }
+.bar-track {
+  width: 64px; height: 4px;
+  background: #EDE8EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .4s ease;
+}
+.bar-label { font-size: 12px; font-weight: 500; color: var(--text-mid); }
+
+/* ── STARS ── */
+.stars { color: #EF9F27; font-size: 12px; letter-spacing: .5px; }
+.stars-val { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+.stars-val.pink { color: var(--pink-600); }
+
+/* ── SHADE SWATCHES ── */
+.swatches { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+.swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.1);
+  flex-shrink: 0;
+}
+
+/* ── CTA ROW ── */
+.tbl-cta {
+  display: grid;
+  grid-template-columns: 190px repeat(3, 1fr);
+  border-top: 1px solid var(--border-md);
+  background: #FFFCFD;
+}
+.tbl-cta-empty { padding: 20px; }
+.tbl-cta-cell {
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border);
+}
+.tbl-cta-cell.featured {
+  background: var(--pink-50);
+  border-left-color: rgba(212,83,126,.15);
+}
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-md);
+  background: transparent;
+  color: var(--text-mid);
+  letter-spacing: .03em;
+  transition: all .2s;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+.btn:hover { background: var(--gray-bg); border-color: var(--border-md); }
+.btn-pink {
+  background: var(--pink-400);
+  color: #fff;
+  border-color: var(--pink-400);
+}
+.btn-pink:hover { background: var(--pink-600); border-color: var(--pink-600); }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+}
+.legend-title { font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-right: 4px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-item span { font-size: 11px; color: var(--text-muted); }
+
+/* ── FOOTER ── */
+.footer-note {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Skincare Intelligence</div>
+  <h1>Ingredient &amp; <em>Formula</em><br>Comparison</h1>
+  <p class="hero-desc">Clinically formulated · Dermatologist tested · Cruelty free</p>
+  <div class="hero-ornament">
+    <span></span><i></i><span></span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wrapper">
+
+  <div class="section-label"><span>Formula breakdown</span></div>
+
+  <div class="table-card">
+
+    <!-- HEADER -->
+    <div class="tbl-head">
+      <div class="tbl-head-empty"></div>
+      <div class="tbl-head-col">
+        <span class="col-name">Pure Glow</span>
+        <span class="col-tier">Entry level</span>
+        <span class="col-price"><sup>$</sup>22</span>
+        <span class="col-price-sub">/ 50 ml</span>
+      </div>
+      <div class="tbl-head-col featured">
+        <span class="badge-featured">✦ Top pick</span>
+        <span class="col-name pink">Radiance+</span>
+        <span class="col-tier pink">Advanced</span>
+        <span class="col-price pink"><sup>$</sup>48</span>
+        <span class="col-price-sub">/ 50 ml</span>
+      </div>
+      <div class="tbl-head-col">
+        <span class="col-name">Luxe Silk</span>
+        <span class="col-tier">Premium</span>
+        <span class="col-price"><sup>$</sup>95</span>
+        <span class="col-price-sub">/ 50 ml</span>
+      </div>
+    </div>
+
+    <!-- SECTION: SCORES -->
+    <div class="tbl-section"><div class="tbl-section-label">Performance scores</div></div>
+
+    <!-- Hydration score -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Hydration score</span>
+        <span class="row-hint">Out of 10</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#EDE8EB" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#5DCAA5" stroke-width="3.5"
+              stroke-dasharray="79.2 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num">6</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#FBEAF0" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#D4537E" stroke-width="3.5"
+              stroke-dasharray="118.7 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num pink">9</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#EDE8EB" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#7F77DD" stroke-width="3.5"
+              stroke-dasharray="105.5 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num">8</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anti-aging -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Anti-aging score</span>
+        <span class="row-hint">Out of 10</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#EDE8EB" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#5DCAA5" stroke-width="3.5"
+              stroke-dasharray="39.6 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num">3</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#FBEAF0" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#D4537E" stroke-width="3.5"
+              stroke-dasharray="105.5 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num pink">8</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="score-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#EDE8EB" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#7F77DD" stroke-width="3.5"
+              stroke-dasharray="118.7 131.9" stroke-linecap="round"/>
+          </svg>
+          <div class="score-inner"><span class="score-num">9</span><span class="score-denom">/10</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: KEY INGREDIENTS -->
+    <div class="tbl-section"><div class="tbl-section-label">Key active ingredients</div></div>
+
+    <!-- Hyaluronic acid -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Hyaluronic acid</span>
+        <span class="row-hint">Deep moisture binding</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:25%;background:#5DCAA5"></div></div>
+          <span class="bar-label">0.5%</span>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#D4537E"></div></div>
+          <span class="bar-label" style="color:var(--pink-600)">2%</span>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:75%;background:#7F77DD"></div></div>
+          <span class="bar-label">1.5%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Retinol -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Retinol</span>
+        <span class="row-hint">Cell renewal</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ None</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-pink">0.3%</span></div>
+      <div class="tbl-cell"><span class="pill pill-pink">0.5%</span></div>
+    </div>
+
+    <!-- Niacinamide -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Niacinamide</span>
+        <span class="row-hint">Brightening · pore refining</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:#5DCAA5"></div></div>
+          <span class="bar-label">5%</span>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#D4537E"></div></div>
+          <span class="bar-label" style="color:var(--pink-600)">10%</span>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:#7F77DD"></div></div>
+          <span class="bar-label">5%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vitamin C -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Vitamin C</span>
+        <span class="row-hint">Antioxidant · radiance</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:#EF9F27"></div></div>
+          <span class="bar-label">5%</span>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#D4537E"></div></div>
+          <span class="bar-label" style="color:var(--pink-600)">15%</span>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:80%;background:#7F77DD"></div></div>
+          <span class="bar-label">12%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Peptides -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Peptide complex</span>
+        <span class="row-hint">Firmness · elasticity</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ None</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-yes">✓ 3 types</span></div>
+      <div class="tbl-cell"><span class="pill pill-yes">✓ 5 types</span></div>
+    </div>
+
+    <!-- SECTION: FORMULA PROFILE -->
+    <div class="tbl-section"><div class="tbl-section-label">Formula profile</div></div>
+
+    <!-- Fragrance -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Fragrance-free</span>
+        <span class="row-hint">Sensitive skin safe</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ No</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-yes">✓ Yes</span></div>
+      <div class="tbl-cell"><span class="pill pill-yes">✓ Yes</span></div>
+    </div>
+
+    <!-- Vegan -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Vegan formula</span>
+        <span class="row-hint">100% plant-derived</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-yes">✓ Yes</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-yes">✓ Yes</span></div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ No</span></div>
+    </div>
+
+    <!-- Dermatologist -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Dermatologist tested</span>
+        <span class="row-hint">Clinically verified</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ No</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-yes">✓ Yes</span></div>
+      <div class="tbl-cell"><span class="pill pill-yes">✓ Yes</span></div>
+    </div>
+
+    <!-- SPF -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Sun protection</span>
+        <span class="row-hint">Broad spectrum UVA/UVB</span>
+      </div>
+      <div class="tbl-cell"><span class="pill pill-no">✕ None</span></div>
+      <div class="tbl-cell featured"><span class="pill pill-pink">SPF 30</span></div>
+      <div class="tbl-cell"><span class="pill pill-pink">SPF 50</span></div>
+    </div>
+
+    <!-- Shade range -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Shade range</span>
+        <span class="row-hint">Foundation shades</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="swatches">
+          <div class="swatch" style="background:#F5DDD0"></div>
+          <div class="swatch" style="background:#E8C4AE"></div>
+          <div class="swatch" style="background:#D4A286"></div>
+          <div class="swatch" style="background:#B8795A"></div>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="swatches">
+          <div class="swatch" style="background:#F5DDD0"></div>
+          <div class="swatch" style="background:#E8C4AE"></div>
+          <div class="swatch" style="background:#D4A286"></div>
+          <div class="swatch" style="background:#B8795A"></div>
+          <div class="swatch" style="background:#8B5E45"></div>
+          <div class="swatch" style="background:#5C3620"></div>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="swatches">
+          <div class="swatch" style="background:#F5DDD0"></div>
+          <div class="swatch" style="background:#E8C4AE"></div>
+          <div class="swatch" style="background:#D4A286"></div>
+          <div class="swatch" style="background:#B8795A"></div>
+          <div class="swatch" style="background:#8B5E45"></div>
+          <div class="swatch" style="background:#5C3620"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: SOCIAL PROOF -->
+    <div class="tbl-section"><div class="tbl-section-label">Social proof</div></div>
+
+    <!-- Rating -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Customer rating</span>
+        <span class="row-hint">Verified reviews</span>
+      </div>
+      <div class="tbl-cell">
+        <div style="text-align:center">
+          <div class="stars">★★★★☆</div>
+          <div><span class="stars-val">4.0 (812)</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div style="text-align:center">
+          <div class="stars">★★★★★</div>
+          <div><span class="stars-val pink">4.9 (3.2k)</span></div>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div style="text-align:center">
+          <div class="stars">★★★★★</div>
+          <div><span class="stars-val">4.6 (1.4k)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repurchase -->
+    <div class="tbl-row">
+      <div class="tbl-row-label">
+        <span class="row-name">Repurchase rate</span>
+        <span class="row-hint">After first purchase</span>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:58%;background:#5DCAA5"></div></div>
+          <span class="bar-label">58%</span>
+        </div>
+      </div>
+      <div class="tbl-cell featured">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:91%;background:#D4537E"></div></div>
+          <span class="bar-label" style="color:var(--pink-600)">91%</span>
+        </div>
+      </div>
+      <div class="tbl-cell">
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" style="width:78%;background:#7F77DD"></div></div>
+          <span class="bar-label">78%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="tbl-cta">
+      <div class="tbl-cta-empty"></div>
+      <div class="tbl-cta-cell">
+        <a href="#" class="btn">Add to bag</a>
+      </div>
+      <div class="tbl-cta-cell featured">
+        <a href="#" class="btn btn-pink">Add to bag</a>
+      </div>
+      <div class="tbl-cta-cell">
+        <a href="#" class="btn">Add to bag</a>
+      </div>
+    </div>
+
+  </div><!-- /table-card -->
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span class="legend-title">Key</span>
+    <div class="legend-item"><span class="pill pill-yes" style="padding:3px 9px;font-size:11px">✓ Included</span></div>
+    <div class="legend-item"><span class="pill pill-no"  style="padding:3px 9px;font-size:11px">✕ Not included</span></div>
+    <div class="legend-item"><span class="pill pill-pink" style="padding:3px 9px;font-size:11px">Concentration %</span></div>
+    <div class="legend-item"><span style="font-size:11px;color:var(--text-muted)">Bars show relative concentration per category</span></div>
+  </div>
+
+  <p class="footer-note">All formulas independently tested. Concentrations verified by third-party lab analysis 2024.</p>
+
+</div><!-- /wrapper -->
+
+</body>
+</html>
