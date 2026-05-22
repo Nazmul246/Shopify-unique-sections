@@ -1,0 +1,866 @@
+{% comment %}
+  Flip Card Gifts Section
+  Prefix: flipcard
+  Fully responsive, pixel-perfect replica of Carpe-style pick-a-card gift reveal
+{% endcomment %}
+
+<style>
+  .flipcard-section {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: #fff;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .flipcard-btn-status-wrapper {
+   display: none;
+  }
+
+  .flipcard-card-wrap.flipcard-done-dimmed .flipcard-face-front {
+    background: #efefef;
+    border-color: #fff;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .flipcard-card-wrap.flipcard-done-dimmed .flipcard-product-img {
+    filter: grayscale(100%) opacity(0.4);
+  }
+
+  .flipcard-logo {
+    margin-bottom: 12px;
+  }
+
+  .flipcard-logo img {
+    max-height: 36px;
+    width: auto;
+  }
+
+  .flipcard-title {
+    font-size: clamp(30px, 4.5vw, 40px);
+    font-weight: 700;
+    color: #000;
+    line-height: 1;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .flipcard-subtitle {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 400;
+    color: #000;
+    margin: 0 0 6px;
+    letter-spacing: 0;
+  }
+
+  .flipcard-logo img {
+    margin: 0 auto;
+  }
+
+  .flipcard-subtitle strong {
+    font-weight: 700 !important;
+  }
+
+  .flipcard-instruction {
+    font-size: clamp(10px, 1.4vw, 14px);
+    color: #000;
+    margin: 0 0 24px;
+    transition: color 0.4s;
+  }
+
+  .flipcard-instruction.flipcard-congrats {
+    color: #dd1d1d;
+    font-weight: 700;
+    font-size: clamp(14px, 2.2vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  @keyframes flipcard-swivel {
+    0%   { transform: rotateY(0deg); }
+    25%  { transform: rotateY(-37deg); }
+    75%  { transform: rotateY(37deg); }
+    100% { transform: rotateY(0deg); }
+  }
+
+  .flipcard-swivel .flipcard-card-inner {
+    animation: flipcard-swivel 0.65s ease-in-out;
+  }
+
+  /* Grid */
+  .flipcard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto 24px;
+  }
+
+  /* Card wrapper */
+  .flipcard-card-wrap {
+    perspective: 1000px;
+    {% comment %} aspect-ratio: 1 / 1; {% endcomment %}
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+
+  .flipcard-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 18px;
+    box-shadow: 0 3px 6px rgb(170, 170, 170);
+  }
+
+  .flipcard-card-wrap.flipcard-flipped .flipcard-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  /* Front face */
+  .flipcard-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .flipcard-face-front {
+    background: #fee7e7;
+    border: 5px solid #dd1d1d63;
+    box-shadow: 0 2px 12px rgba(0,120,255,0.08);
+  }
+
+  .flipcard-face-front img.flipcard-product-img {
+    width: 80%;
+    height: 80%;
+    border-radius: 10px;
+    object-fit: contain;
+    filter: drop-shadow(2px 4px 8px rgba(0,80,200,0.15));
+  }
+
+  /* Back face */
+  .flipcard-face-back {
+    background: #90ee90;
+    border: 5px solid #53e392;
+    transform: rotateY(180deg);
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .flipcard-face-back img.flipcard-gift-img {
+    width: 80%;
+    height: 52%;
+    object-fit: contain;
+  }
+
+  .flipcard-face-back .flipcard-gift-label {
+    font-size: clamp(9px, 1.8vw, 14px);
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: -0.75px;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  /* Already-flipped dimmed cards (not won = grey) */
+  {% comment %} .flipcard-card-wrap.flipcard-flipped .flipcard-face-front {
+    background: #e8e8e8;
+    border-color: #ccc;
+  } {% endcomment %}
+
+  /* Won card highlight */
+  .flipcard-card-wrap.flipcard-flipped.flipcard-won .flipcard-face-back {
+    background: #90ee90;
+    border-color: #53e392;
+  }
+
+  /* Button */
+  .flipcard-btn-wrap {
+    margin: 0 auto 10px;
+    max-width: 340px;
+    padding: 0 16px;
+  }
+
+  .flipcard-btn {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-size: clamp(14px, 2.2vw, 18px);
+    font-weight: 700;
+    text-transform: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, opacity 0.3s, transform 0.15s;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 0.2px;
+  }
+
+  .flipcard-btn.flipcard-btn-locked {
+    background: #c8c8c8;
+    color: #888;
+    pointer-events: none;
+  }
+
+  .flipcard-btn.flipcard-btn-unlocked {
+    background: #dd1d1d;
+    color: #fff;
+    pointer-events: all;
+  }
+
+  .flipcard-btn.flipcard-btn-unlocked:hover {
+    background: #9e1010ff;
+    transform: translateY(-1px);
+  }
+
+  /* Counter */
+  .flipcard-counter {
+    font-size: clamp(13px, 2vw, 16px);
+    color: #444;
+    margin: 0;
+  }
+
+  .flipcard-counter strong {
+    font-weight: 900;
+    color: #111;
+  }
+
+  /* ---- Confetti ---- */
+  .flipcard-confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+  }
+
+  .flipcard-confetti-canvas.flipcard-active {
+    display: block;
+  }
+
+  @media(max-width: 768px){
+    .flipcard-logo img {
+      max-height: 30px;
+      width: auto;
+    }
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 480px) {
+    .flipcard-grid {
+      gap: 6px;
+      padding: 0 12px;
+      max-width: 360px;
+    }
+    .flipcard-face {
+      border-radius: 14px;
+    }
+    .flipcard-card-inner {
+      border-radius: 14px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .flipcard-grid {
+      gap: 6px;
+      padding: 0 8px;
+      max-width: 300px;
+    }
+  }
+</style>
+
+<section class="flipcard-section" id="flipcard-section-{{ section.id }}">
+  <canvas class="flipcard-confetti-canvas" id="flipcard-confetti-{{ section.id }}"></canvas>
+
+  {% if section.settings.logo %}
+    <div class="flipcard-logo">
+      <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ section.settings.logo_alt | default: 'Logo' }}">
+    </div>
+  {% endif %}
+
+  <h2 class="flipcard-title">{{ section.settings.title }}</h2>
+  <p class="flipcard-subtitle">
+    {{ section.settings.subtitle | replace: '<strong>', '<strong>' }}
+  </p>
+  <p class="flipcard-instruction" id="flipcard-instruction-{{ section.id }}">
+    {{ section.settings.instruction_text }}
+  </p>
+
+  <div class="flipcard-grid" id="flipcard-grid-{{ section.id }}">
+    {% assign total_cards = 9 %}
+    {% for i in (1..total_cards) %}
+      <div
+        class="flipcard-card-wrap"
+        data-card-index="{{ forloop.index0 }}"
+        role="button"
+        tabindex="0"
+        aria-label="Pick a card"
+      >
+        <div class="flipcard-card-inner">
+          <!-- Front -->
+          <div class="flipcard-face flipcard-face-front">
+            {% if section.settings.card_front_image %}
+              <img
+                class="flipcard-product-img"
+                src="{{ section.settings.card_front_image | img_url: '300x' }}"
+                alt="Card"
+              >
+            {% else %}
+              <svg width="60%" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="10" width="40" height="60" rx="6" fill="#ff8c42"/>
+                <rect x="26" y="20" width="28" height="3" rx="1.5" fill="#fff" opacity=".6"/>
+                <rect x="26" y="27" width="20" height="3" rx="1.5" fill="#fff" opacity=".4"/>
+                <circle cx="40" cy="50" r="8" fill="#fff" opacity=".2"/>
+              </svg>
+            {% endif %}
+          </div>
+          <!-- Back — populated by JS -->
+          <div class="flipcard-face flipcard-face-back" data-back>
+            <span class="flipcard-gift-label">?</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="flipcard-btn-status-wrapper">
+    <div class="flipcard-btn-wrap">
+      <a
+        href="{{ section.settings.continue_url }}"
+        class="flipcard-btn flipcard-btn-locked"
+        id="flipcard-btn-{{ section.id }}"
+      >
+        {{ section.settings.flip_more_prefix }}
+        {{ section.settings.total_gifts }}
+        {{ section.settings.flip_more_suffix }}
+      </a>
+    </div>
+    <p class="flipcard-counter" id="flipcard-counter-{{ section.id }}">
+      {{ section.settings.counter_prefix }}
+      <strong>0 / {{ section.settings.total_gifts }}</strong> {{ section.settings.counter_suffix }}
+    </p>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var sid = {{ section.id | json }};
+    var TOTAL_GIFTS = {{ section.settings.total_gifts }};
+
+    // Build gifts array from section settings
+    var gifts = [
+      {% for i in (1..5) %}
+      {% assign img_key = 'gift_' | append: i | append: '_image' %}
+      {% assign label_key = 'gift_' | append: i | append: '_label' %}
+      {
+        label: {{ section.settings[label_key] | default: 'Gift' | json }},
+        image: {% if section.settings[img_key] %}{{ section.settings[img_key] | img_url: '200x' | json }}{% else %}null{% endif %}
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+
+    var PREFIX = {{ section.settings.flip_more_prefix | json }};
+    var SUFFIX = {{ section.settings.flip_more_suffix | json }};
+    var COUNTER_PRE = {{ section.settings.counter_prefix | json }};
+    var COUNTER_SUF = {{ section.settings.counter_suffix | json }};
+    var CONGRATS_TEXT = {{ section.settings.congratulations_text | json }};
+    var INSTRUCTION_TEXT = {{ section.settings.instruction_text | json }};
+
+    var grid = document.getElementById('flipcard-grid-' + sid);
+    var btn = document.getElementById('flipcard-btn-' + sid);
+    var counter = document.getElementById('flipcard-counter-' + sid);
+    var instruction = document.getElementById('flipcard-instruction-' + sid);
+    var canvas = document.getElementById('flipcard-confetti-' + sid);
+
+    // Shuffle helper
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    // Assign gifts to 9 card positions
+    // 5 gifts occupy 5 positions; the other 4 positions also get gifts (cycle)
+    function buildAssignment() {
+      var positions = [];
+      for (var p = 0; p < 9; p++) positions.push(p);
+      positions = shuffle(positions);
+
+      // gift index for each card position
+      var assignment = new Array(9);
+      for (var i = 0; i < 9; i++) {
+        assignment[positions[i]] = gifts[i % TOTAL_GIFTS];
+      }
+      return assignment;
+    }
+
+    // Storage key per section (resets on page reload since we use sessionStorage)
+    var STORE_KEY = 'flipcard_state_' + sid;
+
+    function loadState() {
+      try {
+        var raw = sessionStorage.getItem(STORE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return null;
+    }
+
+    function saveState(state) {
+      try {
+        sessionStorage.setItem(STORE_KEY, JSON.stringify(state));
+      } catch(e) {}
+    }
+
+    // Init
+    var state = {
+      assignment: buildAssignment(),
+      flipped: [],
+      wonGifts: [],
+      done: false
+    };
+
+    var cards = grid.querySelectorAll('.flipcard-card-wrap');
+
+    function renderBackFace(cardEl, giftData) {
+      var back = cardEl.querySelector('[data-back]');
+      if (!back) return;
+      back.innerHTML = '';
+      if (giftData.image) {
+        var img = document.createElement('img');
+        img.className = 'flipcard-gift-img';
+        img.src = giftData.image;
+        img.alt = giftData.label;
+        back.appendChild(img);
+      } else {
+        var emoji = document.createElement('div');
+        emoji.style.cssText = 'font-size:2em;';
+        emoji.textContent = '🎁';
+        back.appendChild(emoji);
+      }
+      var lbl = document.createElement('div');
+      lbl.className = 'flipcard-gift-label';
+      lbl.textContent = giftData.label;
+      back.appendChild(lbl);
+    }
+
+    // Restore previously flipped cards
+    state.flipped.forEach(function(idx) {
+      var card = cards[idx];
+      if (!card) return;
+      card.classList.add('flipcard-flipped', 'flipcard-won');
+      renderBackFace(card, state.assignment[idx]);
+    });
+
+    updateUI();
+
+    // Swivel animation
+    (function startSwivel() {
+      var animate = function() {
+        if (state.done) return;
+        var available = Array.from(cards).filter(function(c) {
+          return !c.classList.contains('flipcard-flipped') &&
+                 !c.classList.contains('flipcard-swivel');
+        });
+        if (!available.length) return;
+        var card = available[Math.floor(Math.random() * available.length)];
+        card.classList.add('flipcard-swivel');
+        setTimeout(function() { card.classList.remove('flipcard-swivel'); }, 800);
+        setTimeout(animate, 1800);
+      };
+      setTimeout(animate, 1000);
+    })();
+
+    function updateUI() {
+      var flippedCount = state.flipped.length;
+      var remaining = TOTAL_GIFTS - flippedCount;
+
+      // Counter
+      counter.innerHTML = COUNTER_PRE + ' <strong>' + flippedCount + ' / ' + TOTAL_GIFTS + '</strong> ' + COUNTER_SUF;
+
+      // Button
+      if (flippedCount >= TOTAL_GIFTS) {
+        btn.textContent = {{ section.settings.continue_btn_text | json }};
+        btn.classList.remove('flipcard-btn-locked');
+        btn.classList.add('flipcard-btn-unlocked');
+      } else {
+        var moreCount = TOTAL_GIFTS - flippedCount;
+        {% comment %} if (flippedCount === 0) {
+          btn.textContent = PREFIX + ' ' + (TOTAL_GIFTS - 1) + ' ' + SUFFIX;
+        } else {
+          btn.textContent = PREFIX + ' ' + moreCount + ' ' + SUFFIX;
+        } {% endcomment %}
+        btn.textContent = PREFIX + ' ' + moreCount + ' ' + SUFFIX;
+        btn.classList.add('flipcard-btn-locked');
+        btn.classList.remove('flipcard-btn-unlocked');
+      }
+
+      // Instruction
+      if (flippedCount >= TOTAL_GIFTS) {
+        instruction.textContent = CONGRATS_TEXT;
+        instruction.classList.add('flipcard-congrats');
+      } else {
+        instruction.textContent = INSTRUCTION_TEXT;
+        instruction.classList.remove('flipcard-congrats');
+      }
+    }
+
+    // Card click
+    cards.forEach(function(card, idx) {
+      function handleFlip() {
+        if (card.classList.contains('flipcard-flipped')) return;
+        if (state.flipped.length >= TOTAL_GIFTS) return;
+
+        // Check if this card's gift is already won
+        var giftData = state.assignment[idx];
+        var alreadyWon = state.wonGifts.some(function(g) { return g.label === giftData.label; });
+
+        // If gift already won and remaining unflipped cards can still give distinct gifts, skip
+        // (We guarantee all 5 unique gifts by tracking wonGifts)
+        // Find an available gift not yet won
+        if (alreadyWon) {
+          // Find the next card position that has an unwon gift and is not yet flipped
+          var found = false;
+          for (var p = 0; p < 9; p++) {
+            if (state.flipped.indexOf(p) === -1) {
+              var pg = state.assignment[p];
+              var pgWon = state.wonGifts.some(function(g) { return g.label === pg.label; });
+              if (!pgWon) {
+                // reassign this clicked card to have the found gift, swap
+                var tmp = state.assignment[p];
+                state.assignment[p] = state.assignment[idx];
+                state.assignment[idx] = tmp;
+                giftData = state.assignment[idx];
+                found = true;
+                break;
+              }
+            }
+          }
+        }
+
+        // Flip
+        state.flipped.push(idx);
+        state.wonGifts.push(giftData);
+        saveState(state);
+
+        renderBackFace(card, giftData);
+        card.classList.add('flipcard-flipped', 'flipcard-won');
+
+        // Show button/counter wrapper on first flip
+        document.querySelector('#flipcard-section-' + sid + ' .flipcard-btn-status-wrapper').style.display = 'block';
+
+        updateUI();
+
+        if (state.flipped.length >= TOTAL_GIFTS) {
+          state.done = true; // stops swivel animation
+          cards.forEach(function(c) {
+            if (!c.classList.contains('flipcard-flipped')) {
+              c.classList.add('flipcard-done-dimmed');
+            }
+          });
+          setTimeout(launchConfetti, 400);
+        }
+
+        // Confetti on last flip
+        {% comment %} if (state.flipped.length >= TOTAL_GIFTS) {
+          setTimeout(launchConfetti, 400);
+        } {% endcomment %}
+      }
+
+      card.addEventListener('click', handleFlip);
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleFlip(); }
+      });
+    });
+
+    // ---- Confetti ----
+    function launchConfetti() {
+      canvas.classList.add('flipcard-active');
+      var ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      var pieces = [];
+      var colors = ['#ff6b1a','#4cda7e','#1ab0f5','#ffd700','#ff4d6d','#a855f7','#22d3ee'];
+      var total = 160;
+
+      for (var i = 0; i < total; i++) {
+        pieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height * 0.5 - 20,
+          w: Math.random() * 10 + 6,
+          h: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: Math.random() * 3 + 2,
+          angle: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.15,
+          drift: (Math.random() - 0.5) * 1.5
+        });
+      }
+
+      var start = null;
+      var duration = 4000;
+
+      function draw(ts) {
+        if (!start) start = ts;
+        var elapsed = ts - start;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var alive = false;
+        pieces.forEach(function(p) {
+          p.y += p.speed;
+          p.x += p.drift;
+          p.angle += p.spin;
+          if (p.y < canvas.height + 20) alive = true;
+
+          ctx.save();
+          ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+          ctx.rotate(p.angle);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = elapsed < duration ? 1 : Math.max(0, 1 - (elapsed - duration) / 600);
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+
+        if (alive && elapsed < duration + 1000) {
+          requestAnimationFrame(draw);
+        } else {
+          canvas.classList.remove('flipcard-active');
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Flip Card Gifts",
+  "tag": "section",
+  "class": "flipcard-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo Alt Text",
+      "default": "Brand Logo"
+    },
+    {
+      "type": "header",
+      "content": "Heading Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Main Title",
+      "default": "PICK A CARD"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "instruction_text",
+      "label": "Instruction Text",
+      "default": "( tap a card )"
+    },
+    {
+      "type": "text",
+      "id": "congratulations_text",
+      "label": "Congratulations Text",
+      "default": "CONGRATULATIONS!"
+    },
+    {
+      "type": "header",
+      "content": "Card Front"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_front_image",
+      "label": "Card Front Image (product/brand image)"
+    },
+    {
+      "type": "header",
+      "content": "Gifts"
+    },
+    {
+      "type": "number",
+      "id": "total_gifts",
+      "label": "Total Number of Gifts",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Gift 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_1_image",
+      "label": "Gift 1 Image"
+    },
+    {
+      "type": "text",
+      "id": "gift_1_label",
+      "label": "Gift 1 Label",
+      "default": "Seat Gap Fillers"
+    },
+    {
+      "type": "header",
+      "content": "Gift 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_2_image",
+      "label": "Gift 2 Image"
+    },
+    {
+      "type": "text",
+      "id": "gift_2_label",
+      "label": "Gift 2 Label",
+      "default": "Seat Belt Pads"
+    },
+    {
+      "type": "header",
+      "content": "Gift 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_3_image",
+      "label": "Gift 3 Image"
+    },
+    {
+      "type": "text",
+      "id": "gift_3_label",
+      "label": "Gift 3 Label",
+      "default": "Microfiber Towel"
+    },
+    {
+      "type": "header",
+      "content": "Gift 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_4_image",
+      "label": "Gift 4 Image"
+    },
+    {
+      "type": "text",
+      "id": "gift_4_label",
+      "label": "Gift 4 Label",
+      "default": "Air Fresheners"
+    },
+    {
+      "type": "header",
+      "content": "Gift 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_5_image",
+      "label": "Gift 5 Image"
+    },
+    {
+      "type": "text",
+      "id": "gift_5_label",
+      "label": "Gift 5 Label",
+      "default": "Gift Card"
+    },
+    {
+      "type": "header",
+      "content": "Button & Counter Text"
+    },
+    {
+      "type": "text",
+      "id": "flip_more_prefix",
+      "label": "Flip More Button – Prefix",
+      "default": "Flip"
+    },
+    {
+      "type": "text",
+      "id": "flip_more_suffix",
+      "label": "Flip More Button – Suffix",
+      "default": "More Cards"
+    },
+    {
+      "type": "text",
+      "id": "continue_btn_text",
+      "label": "Continue Button Text",
+      "default": "🎁  Continue  →"
+    },
+    {
+      "type": "url",
+      "id": "continue_url",
+      "label": "Continue Button Link"
+    },
+    {
+      "type": "text",
+      "id": "counter_prefix",
+      "label": "Counter Text – Prefix",
+      "default": "You won"
+    },
+    {
+      "type": "text",
+      "id": "counter_suffix",
+      "label": "Counter Text – Suffix",
+      "default": "gifts"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flip Card Gifts"
+    }
+  ]
+}
+{% endschema %}

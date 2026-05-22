@@ -1,0 +1,1269 @@
+{% comment %} render in your main-product liquid first {% endcomment %}
+
+{%- when 'seat_cover_configurator' -%}
+    {%- render 'seat-cover-configurator', block: block, product: product -%}
+
+{% comment %} then create a snippets and add this code {% endcomment %}
+ {% comment %}
+  Seat Cover Configurator Snippet
+  Usage: render 'seat-cover-configurator', block: block, product: product
+  Upload to: snippets/seat-cover-configurator.liquid
+{% endcomment %}
+
+<div class="product-block scc-wrapper" {{ block.shopify_attributes }} id="scc-{{ block.id }}">
+  {% comment %} trust bar {% endcomment %}
+  <div class="scc-trust-bar">
+    {%- if block.settings.trust_1_text != blank -%}
+      <div class="scc-trust-bar__item">
+        {%- if block.settings.trust_1_icon != blank -%}
+          <img src="{{ block.settings.trust_1_icon | img_url: '40x40', crop: 'center' }}" alt="{{ block.settings.trust_1_text }}" class="scc-trust-bar__icon">
+        {%- endif -%}
+        <span class="scc-trust-bar__text">{{ block.settings.trust_1_text }}</span>
+      </div>
+    {%- endif -%}
+    {%- if block.settings.trust_2_text != blank -%}
+      <div class="scc-trust-bar__item">
+        {%- if block.settings.trust_2_icon != blank -%}
+          <img src="{{ block.settings.trust_2_icon | img_url: '40x40', crop: 'center' }}" alt="{{ block.settings.trust_2_text }}" class="scc-trust-bar__icon">
+        {%- endif -%}
+        <span class="scc-trust-bar__text">{{ block.settings.trust_2_text }}</span>
+      </div>
+    {%- endif -%}
+    {%- if block.settings.trust_3_text != blank -%}
+      <div class="scc-trust-bar__item">
+        {%- if block.settings.trust_3_icon != blank -%}
+          <img src="{{ block.settings.trust_3_icon | img_url: '40x40', crop: 'center' }}" alt="{{ block.settings.trust_3_text }}" class="scc-trust-bar__icon">
+        {%- endif -%}
+        <span class="scc-trust-bar__text">{{ block.settings.trust_3_text }}</span>
+      </div>
+    {%- endif -%}
+  </div>
+  {%- comment %} ── COUNTDOWN BANNER ── {%- endcomment %}
+  <div class="scc-banner">
+    <div class="scc-banner__inner">
+      <div class="scc-banner__text">🌟 {{ block.settings.banner_text }}</div>
+      <div class="scc-countdown" id="scc-countdown-{{ block.id }}" data-deadline="{{ block.settings.countdown_end }}">
+        {% comment %} <div class="scc-countdown__block">
+          <span class="scc-countdown__num" data-days>00</span><span class="scc-countdown__lbl">DAYS</span>
+        </div>
+        <span class="scc-countdown__sep">:</span> {% endcomment %}
+        <div class="scc-countdown__block">
+          <span class="scc-countdown__num" data-hrs>00</span><span class="scc-countdown__lbl">HRS</span>
+        </div>
+        <span class="scc-countdown__sep">:</span>
+        <div class="scc-countdown__block">
+          <span class="scc-countdown__num" data-min>00</span><span class="scc-countdown__lbl">MIN</span>
+        </div>
+        <span class="scc-countdown__sep">:</span>
+        <div class="scc-countdown__block">
+          <span class="scc-countdown__num" data-sec>00</span><span class="scc-countdown__lbl">SEC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment %} ── PRIZE BANNER ── {%- endcomment %}
+  {%- if block.settings.prize_text != blank -%}
+    <div class="scc-prize">
+      <p class="scc-prize__main">{{ block.settings.prize_text }}</p>
+      <p class="scc-prize__sub">{{ block.settings.prize_subtext }}</p>
+      <p class="scc-gifts__headline">
+        {{ block.settings.gifts__headline }} (value £{{ block.settings.gifts_total_value }}) with<br>
+        <strong>{{ block.settings.gifts__headline_second }}</strong>
+      </p>
+    </div>
+  {%- endif -%}
+
+  {%- comment %} ── FREE GIFTS ── {%- endcomment %}
+  <div class="scc-gifts">
+    <div class="scc-gifts__grid">
+      {%- if block.settings.gift_1_name != blank -%}
+        <div class="scc-gift-item">
+          {%- if block.settings.gift_1_image != blank -%}
+            <img
+              src="{{ block.settings.gift_1_image | img_url: '120x120', crop: 'center' }}"
+              alt="{{ block.settings.gift_1_name }}"
+              loading="lazy"
+              class="scc-gift-item__img"
+            >
+          {%- endif -%}
+          <p class="scc-gift-item__name">{{ block.settings.gift_1_name }}</p>
+          <p class="scc-gift-item__msrp">
+            <s>£{{ block.settings.gift_1_msrp }} </s>{{ block.settings.free_title }}
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if block.settings.gift_2_name != blank -%}
+        <div class="scc-gift-item">
+          {%- if block.settings.gift_2_image != blank -%}
+            <img
+              src="{{ block.settings.gift_2_image | img_url: '120x120', crop: 'center' }}"
+              alt="{{ block.settings.gift_2_name }}"
+              loading="lazy"
+              class="scc-gift-item__img"
+            >
+          {%- endif -%}
+          <p class="scc-gift-item__name">{{ block.settings.gift_2_name }}</p>
+          <p class="scc-gift-item__msrp">
+            <s>£{{ block.settings.gift_2_msrp }} </s>{{ block.settings.free_title }}
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if block.settings.gift_3_name != blank -%}
+        <div class="scc-gift-item">
+          {%- if block.settings.gift_3_image != blank -%}
+            <img
+              src="{{ block.settings.gift_3_image | img_url: '120x120', crop: 'center' }}"
+              alt="{{ block.settings.gift_3_name }}"
+              loading="lazy"
+              class="scc-gift-item__img"
+            >
+          {%- endif -%}
+          <p class="scc-gift-item__name">{{ block.settings.gift_3_name }}</p>
+          <p class="scc-gift-item__msrp">
+            <s>£{{ block.settings.gift_3_msrp }} </s>{{ block.settings.free_title }}
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if block.settings.gift_4_name != blank -%}
+        <div class="scc-gift-item">
+          {%- if block.settings.gift_4_image != blank -%}
+            <img
+              src="{{ block.settings.gift_4_image | img_url: '120x120', crop: 'center' }}"
+              alt="{{ block.settings.gift_4_name }}"
+              loading="lazy"
+              class="scc-gift-item__img"
+            >
+          {%- endif -%}
+          <p class="scc-gift-item__name">{{ block.settings.gift_4_name }}</p>
+          <p class="scc-gift-item__msrp">
+            <s>£{{ block.settings.gift_4_msrp }} </s>{{ block.settings.free_title }}
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if block.settings.gift_5_name != blank -%}
+        <div class="scc-gift-item">
+          {%- if block.settings.gift_5_image != blank -%}
+            <img
+              src="{{ block.settings.gift_5_image | img_url: '120x120', crop: 'center' }}"
+              alt="{{ block.settings.gift_5_name }}"
+              loading="lazy"
+              class="scc-gift-item__img"
+            >
+          {%- endif -%}
+          <p class="scc-gift-item__name">{{ block.settings.gift_5_name }}</p>
+          <p class="scc-gift-item__msrp">
+            <s>£{{ block.settings.gift_5_msrp }} </s>{{ block.settings.free_title }}
+          </p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment %} ── CONFIGURATOR ── {%- endcomment %}
+  <div class="scc-config">
+    {% if block.settings.bundle_title != blank %}
+      <p class="scc-config__title">{{ block.settings.bundle_title }}</p>
+    {% endif %}
+
+    {%- comment %} STEP 1: Vehicle Details {%- endcomment %}
+    <div class="scc-step" id="scc-step1-{{ block.id }}" data-step="1">
+      <div class="scc-step__header" tabindex="0" role="button" aria-expanded="true">
+        <div class="scc-step__badge scc-step__badge--active" id="scc-badge1-{{ block.id }}">1</div>
+        <h3 class="scc-step__title">Vehicle Details</h3>
+        <svg class="scc-step__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="scc-step__body" id="scc-body1-{{ block.id }}">
+        <div class="scc-ymm">
+          <select class="scc-select" id="scc-year-{{ block.id }}" aria-label="Select Year">
+            <option value="">Year</option>
+          </select>
+          <select class="scc-select" id="scc-make-{{ block.id }}" disabled aria-label="Select Make">
+            <option value="">Make</option>
+          </select>
+          
+          {% comment %} list="scc-model-list-{{ block.id }}" {% endcomment %}
+          <div style="position:relative; flex:1;">
+            <input
+              class="scc-select"
+              id="scc-model-{{ block.id }}"
+              placeholder="Enter Your Car Model Here"
+              disabled
+              aria-label="Select or type Model"
+              autocomplete="off"
+              style="width:100%; -webkit-appearance:none; appearance:none; background-image:none;"
+            />
+            <datalist id="scc-model-list-{{ block.id }}"></datalist>
+          </div>
+        </div>
+      </div>
+      <div class="scc-step__summary" id="scc-summary1-{{ block.id }}" style="display:none">
+        <span id="scc-vehicle-text-{{ block.id }}"></span>
+      </div>
+    </div>
+
+    {%- comment %} STEP 2: Setup {%- endcomment %}
+    <div class="scc-step scc-step--locked" id="scc-step2-{{ block.id }}" data-step="2">
+      <div class="scc-step__header" tabindex="0" role="button" aria-expanded="false">
+        <div class="scc-step__badge" id="scc-badge2-{{ block.id }}">2</div>
+        <h3 class="scc-step__title">Number of Seats</h3>
+        <svg class="scc-step__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="scc-step__body" id="scc-body2-{{ block.id }}" style="display:none">
+        <div class="scc-setup-options" id="scc-seats-{{ block.id }}">
+          {%- assign seat_options = product.options_with_values | where: 'name', 'Number of Seats' -%}
+          {%- for option in product.options_with_values -%}
+            {%- if option.name == 'Number of Seats' -%}
+              {%- for value in option.values -%}
+                <label class="scc-setup-option" data-seats="{{ value }}">
+                  <input
+                    type="radio"
+                    name="scc_seats_{{ block.id }}"
+                    value="{{ value }}"
+                    class="scc-setup-option__radio"
+                  >
+                  <div class="scc-setup-option__inner">
+                    <div class="scc-setup-option__left">
+                      <span class="scc-setup-option__name">{{ value }}</span>
+                    </div>
+                    <div class="scc-setup-option__right">
+                      <span class="scc-setup-option__label">FROM</span>
+                      <div class="scc-setup-option__prices">
+                        <span
+                          class="scc-price--new scc-seats-price"
+                          data-seats="{{ value }}"
+                          >—</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </label>
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="scc-step__summary" id="scc-summary2-{{ block.id }}" style="display:none">
+        <span id="scc-setup-text-{{ block.id }}"></span>
+      </div>
+    </div>
+
+    <div class="scc-step scc-step--locked" id="scc-step3-{{ block.id }}" data-step="3">
+      <div class="scc-step__header" tabindex="0" role="button" aria-expanded="false">
+        <div class="scc-step__badge" id="scc-badge3-{{ block.id }}">3</div>
+        <h3 class="scc-step__title" id="scc-logo-title-{{ block.id }}">Logo</h3>
+        <svg class="scc-step__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="scc-step__body" id="scc-body3-{{ block.id }}" style="display:none">
+        <div class="scc-setup-options scc-for-logo">
+          {%- for option in product.options_with_values -%}
+            {%- if option.name == 'LOGO' -%}
+              {%- for value in option.values -%}
+                <label class="scc-setup-option" data-logo="{{ value }}">
+                  <input
+                    type="radio"
+                    name="scc_logo_{{ block.id }}"
+                    value="{{ value }}"
+                    class="scc-logo-radio"
+                  >
+                  <div class="scc-setup-option__inner">
+                    <div class="scc-setup-option__left">
+                      <span class="scc-setup-option__name">{{ value }}</span>
+                    </div>
+                    <div class="scc-setup-option__right">
+                      <span class="scc-logo-price-diff" data-logo="{{ value }}"></span>
+                    </div>
+                  </div>
+                </label>
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="scc-step__summary" id="scc-summary3-{{ block.id }}" style="display:none">
+        <span id="scc-logo-text-{{ block.id }}"></span>
+      </div>
+    </div>
+
+    {%- comment %} STEP 3: Color {%- endcomment %}
+    <div class="scc-step scc-step--locked" id="scc-step4-{{ block.id }}" data-step="4">
+      <div class="scc-step__header" tabindex="0" role="button" aria-expanded="false">
+        <div class="scc-step__badge" id="scc-badge4-{{ block.id }}">3</div>
+        <h3 class="scc-step__title" id="scc-color-title-{{ block.id }}">Color</h3>
+        <svg class="scc-step__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="scc-step__body" id="scc-body4-{{ block.id }}" style="display:none">
+        <div class="scc-colors" id="scc-color-swatches-{{ block.id }}">
+          {%- assign seen_colors = '' -%}
+          {%- for variant in product.variants -%}
+            {%- unless seen_colors contains variant.option2 -%}
+              {%- if variant.featured_image -%}
+                <button
+                  type="button"
+                  class="scc-swatch"
+                  data-color="{{ variant.option2 }}"
+                  data-image="{{ variant.featured_image | img_url: '800x800' }}"
+                  aria-label="{{ variant.option2 }}"
+                  title="{{ variant.option2 }}"
+                >
+                  <img
+                    src="{{ variant.featured_image | img_url: '80x80', crop: 'center' }}"
+                    alt="{{ variant.option2 }}"
+                    loading="lazy"
+                  >
+                </button>
+                {%- assign seen_colors = seen_colors | append: variant.option2 | append: '|' -%}
+              {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="scc-step scc-step--locked" id="scc-step5-{{ block.id }}" data-step="5">
+      <div class="scc-step__header" tabindex="0" role="button" aria-expanded="false">
+        <div class="scc-step__badge" id="scc-badge5-{{ block.id }}">5</div>
+        <h3 class="scc-step__title">Transmission Type</h3>
+        <svg class="scc-step__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="scc-step__body" id="scc-body5-{{ block.id }}" style="display:none">
+        <div class="scc-setup-options scc-for-transmission">
+          <label class="scc-setup-option">
+            <input
+              type="radio"
+              name="scc_transmission_{{ block.id }}"
+              value="Manual"
+              class="scc-transmission-radio scc-setup-option__radio"
+            >
+            <div class="scc-setup-option__inner">
+              <div class="scc-setup-option__left">
+                <span class="scc-setup-option__name">Manual</span>
+              </div>
+            </div>
+          </label>
+          <label class="scc-setup-option">
+            <input
+              type="radio"
+              name="scc_transmission_{{ block.id }}"
+              value="Automatic"
+              class="scc-transmission-radio scc-setup-option__radio"
+            >
+            <div class="scc-setup-option__inner">
+              <div class="scc-setup-option__left">
+                <span class="scc-setup-option__name">Automatic</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="scc-step__summary" id="scc-summary5-{{ block.id }}" style="display:none">
+        <span id="scc-transmission-text-{{ block.id }}"></span>
+      </div>
+    </div>
+
+    {%- comment %} ── ADD TO CART BUTTON ── {%- endcomment %}
+    <button type="button" class="scc-atc" id="scc-atc-{{ block.id }}" disabled>
+      <span class="scc-atc__label">Add To Cart</span>
+      <span class="scc-atc__prices" id="scc-atc-prices-{{ block.id }}" style="display:none">
+        <s class="scc-atc__old" id="scc-atc-msrp-{{ block.id }}">£{{ block.settings.msrp_front_only }}</s>
+        <span class="scc-atc__new" id="scc-atc-price-{{ block.id }}">£{{ block.settings.price_front_only }}</span>
+      </span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    {%- comment %} ── PETSUITE UPSELL ── {%- endcomment %}
+    {%- if block.settings.petsuite_variant_id != blank -%}
+      <div class="scc-upsell">
+        {%- if block.settings.petsuite_image != blank -%}
+          <img
+            src="{{ block.settings.petsuite_image | img_url: '100x100', crop: 'center' }}"
+            alt="PetSuite Back Seat Protector"
+            class="scc-upsell__img"
+          >
+        {%- endif -%}
+        <div class="scc-upsell__body">
+          <p class="scc-upsell__name">PetSuite Back Seat Protector</p>
+          <div class="scc-upsell__prices">
+            <s class="scc-upsell__old">£{{ block.settings.petsuite_msrp }}</s>
+            <span class="scc-upsell__new">£{{ block.settings.petsuite_price }}</span>
+            <span class="scc-upsell__badge">{{ block.settings.petsuite_discount }}% OFF</span>
+          </div>
+        </div>
+        <label class="scc-toggle" aria-label="Add PetSuite protector">
+          <input
+            type="checkbox"
+            id="scc-petsuite-{{ block.id }}"
+            data-variant-id="{{ block.settings.petsuite_variant_id }}"
+          >
+          <span class="scc-toggle__track"></span>
+        </label>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- comment %} ── STYLES (injected once) ── {%- endcomment %}
+{%- unless scc_styles_rendered -%}
+  {%- assign scc_styles_rendered = true -%}
+  {{ 'seat-cover-configurator.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+<script>
+      (function() {
+        var BID = {{ block.id | json }};
+        var $ = function(id) { return document.getElementById(id); };
+
+        // ── State ──
+        var state = {
+          year: '', make: '', model: '',
+          seats: '', logo: '',
+          color: '', variantId: '', price: '', comparePrice: '',
+          transmission: ''
+        };
+
+        // ── DOM refs ──
+        var yearSel  = $('scc-year-'  + BID);
+        var makeSel  = $('scc-make-'  + BID);
+        var modelSel = $('scc-model-' + BID);
+        var atcBtn   = $('scc-atc-'   + BID);
+
+        // ── Load vehicle data from asset ──
+        fetch({{ 'vehicles.json' | asset_url | json }})
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            // Populate years
+            Object.keys(data).sort(function(a,b){ return b-a; }).forEach(function(y){
+              var o = document.createElement('option');
+              o.value = y; o.textContent = y;
+              yearSel.appendChild(o);
+            });
+
+            yearSel.addEventListener('change', function(){
+              state.year = this.value;
+              makeSel.innerHTML = '<option value="">Make</option>';
+              modelSel.value = '';
+              var dl = document.getElementById('scc-model-list-' + BID);
+              if (dl) dl.innerHTML = '';
+              makeSel.disabled = true; modelSel.disabled = true;
+              state.make = ''; state.model = '';
+              if (!this.value) return;
+              Object.keys(data[this.value] || {}).sort().forEach(function(m){
+                var o = document.createElement('option');
+                o.value = m; o.textContent = m;
+                makeSel.appendChild(o);
+              });
+              makeSel.disabled = false;
+            });
+
+            makeSel.addEventListener('change', function(){
+              state.make = this.value;
+              // Clear input and datalist
+              modelSel.value = '';
+              var dl = document.getElementById('scc-model-list-' + BID);
+              dl.innerHTML = '';
+              modelSel.disabled = true;
+              state.model = '';
+              if (!this.value) return;
+
+              ((data[state.year] || {})[this.value] || []).sort().forEach(function(m){
+                var o = document.createElement('option');
+                o.value = m;
+                dl.appendChild(o);
+              });
+              modelSel.disabled = false;
+            });
+
+            function checkModel() {
+              state.model = modelSel.value.trim();
+              if (state.year && state.make && state.model) {
+                completeStep1();
+              } else if (!state.model) {
+                resetFromStep(2);
+              }
+            }
+
+            modelSel.addEventListener('change', checkModel);
+
+            modelSel.addEventListener('keydown', function(e){
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                checkModel();
+              }
+            });
+          })
+          .catch(function(e){ console.error('SCC: vehicle data failed', e); });
+
+        // ── Step 1 complete ──
+        function completeStep1() {
+          $('scc-vehicle-text-' + BID).textContent = state.year + ' ' + state.make + ' ' + state.model;
+          collapseStep(1); unlockStep(2); expandStep(2); doneBadge(1);
+        }
+
+        // ── Setup radios ──
+        // ── Seats selection ──
+    document.querySelectorAll('#scc-' + BID + ' .scc-setup-option__radio[name^="scc_seats"]').forEach(function(r){
+      r.addEventListener('change', function(){
+        state.seats = this.value;
+        document.querySelectorAll('#scc-' + BID + ' [name^="scc_seats"]').forEach(function(o){
+          o.closest('.scc-setup-option').classList.remove('scc-setup-option--selected');
+        });
+        this.closest('.scc-setup-option').classList.add('scc-setup-option--selected');
+        // Update min price display for selected seat
+        updateSeatsPrice();
+        $('scc-setup-text-' + BID).textContent = state.seats;
+        // Reset downstream
+        state.logo = ''; state.color = ''; state.variantId = '';
+        resetFromStep(3);
+  collapseStep(2); unlockStep(3); expandStep(3); doneBadge(2);
+      });
+    });
+
+    // ── Logo selection ──
+    document.querySelectorAll('#scc-' + BID + ' .scc-logo-radio').forEach(function(r){
+      r.addEventListener('change', function(){
+        state.logo = this.value;
+        document.querySelectorAll('#scc-' + BID + ' .scc-logo-radio').forEach(function(o){
+          o.closest('.scc-setup-option').classList.remove('scc-setup-option--selected');
+        });
+        this.closest('.scc-setup-option').classList.add('scc-setup-option--selected');
+        $('scc-logo-text-' + BID).textContent = state.logo;
+        // Filter colour swatches based on seats+logo
+        filterColourSwatches();
+        collapseStep(3); unlockStep(4); expandStep(4); doneBadge(3);
+        state.color = ''; state.variantId = '';
+      });
+    });
+
+    // ── Transmission ──
+    document.querySelectorAll('#scc-' + BID + ' .scc-transmission-radio').forEach(function(r){
+      r.addEventListener('change', function(){
+        state.transmission = this.value;
+        document.querySelectorAll('#scc-' + BID + ' .scc-transmission-radio').forEach(function(o){
+          o.closest('.scc-setup-option').classList.remove('scc-setup-option--selected');
+        });
+        this.closest('.scc-setup-option').classList.add('scc-setup-option--selected');
+        $('scc-transmission-text-' + BID).textContent = state.transmission;
+        collapseStep(5); doneBadge(5); enableATC();
+      });
+    });
+
+        function completeStep2() {
+          collapseStep(2); unlockStep(3); expandStep(3); doneBadge(2);
+        }
+
+        // ── Color swatches ──
+        document.querySelectorAll('#scc-' + BID + ' .scc-swatch').forEach(function(btn){
+          btn.addEventListener('click', function(){
+          document.querySelectorAll('#scc-' + BID + ' .scc-swatch').forEach(function(b){
+            b.classList.remove('scc-swatch--active');
+          });
+          this.classList.add('scc-swatch--active');
+          state.color = this.dataset.color;
+          $('scc-color-title-' + BID).textContent = 'Colour - ' + state.color;
+
+          var matched = VARIANTS.find(function(v){
+            return v.option1 === state.seats
+              && v.option2 === state.color
+              && v.option3 === state.logo;
+          });
+
+          if (matched) {
+            state.variantId = matched.id;
+            state.price = matched.price;
+            state.comparePrice = matched.compare_at_price;
+
+            // ATC button prices
+            $('scc-atc-price-' + BID).textContent = '£' + (parseFloat(matched.price) / 100).toFixed(2);
+            $('scc-atc-msrp-' + BID).textContent = '£' + (parseFloat(matched.compare_at_price) / 100).toFixed(2);
+            $('scc-atc-prices-' + BID).style.display = '';
+
+            // Sync native price block
+            var formattedPrice = '£' + (parseFloat(matched.price) / 100).toFixed(2);
+            var formattedCompare = '£' + (parseFloat(matched.compare_at_price) / 100).toFixed(2);
+            var isOnSale = matched.compare_at_price > matched.price;
+
+            var nativePrice = document.querySelector('[data-product-price]');
+            var nativeCompare = document.querySelector('[data-compare-price]');
+            var nativeCompareWrap = document.querySelector('[data-product-price-wrap]');
+            var nativeSavePrice = document.querySelector('[data-save-price]');
+
+            if (nativePrice) {
+              nativePrice.textContent = formattedPrice;
+              isOnSale ? nativePrice.classList.add('on-sale') : nativePrice.classList.remove('on-sale');
+            }
+            if (nativeCompare) {
+              nativeCompare.textContent = isOnSale ? formattedCompare : '';
+            }
+            if (nativeCompareWrap) {
+              nativeCompareWrap.classList.toggle('hide', !isOnSale);
+            }
+            if (nativeSavePrice) {
+              nativeSavePrice.classList.toggle('hide', !isOnSale);
+            }
+          }
+
+            // Gallery sync
+            var newSrc = this.dataset.image;
+            if (newSrc && newSrc !== 'undefined') {
+              var featImg = document.querySelector('.product-image-main img, .product__media img');
+              if (featImg) { featImg.src = newSrc; featImg.srcset = ''; }
+            }
+
+            doneBadge(4); unlockStep(5); expandStep(5);
+            state.transmission = '';
+          });
+        });
+
+        function enableATC() {
+          atcBtn.disabled = false;
+          atcBtn.classList.add('scc-atc--ready');
+        }
+
+        // ── Add To Cart ──
+        atcBtn.addEventListener('click', function(){
+          if (!state.variantId) return;
+          var self = this;
+          self.disabled = true;
+          self.querySelector('.scc-atc__label').textContent = 'Adding...';
+
+         var GIFT_VARIANT_IDS = [
+            {{ all_products['seat-gap-fillers'].variants.first.id }},
+            {{ all_products['seat-belt-pad'].variants.first.id }},
+            {{ all_products['microfibre-towels'].variants.first.id }},
+            {{ all_products['air-fresheners-free'].variants.first.id }},
+            {{ all_products['gift-card'].variants.first.id }}
+          ]; 
+
+          var items = [{
+            id: parseInt(state.variantId),
+            quantity: 1,
+            properties: {
+              'Year': state.year,
+              'Make': state.make,
+              'Model': state.model,
+              'Number of Seats': state.seats,
+              'Colour': state.color,
+              'Logo': state.logo,
+              'Transmission': state.transmission,
+              '_gift_group': state.variantId
+            }
+          }];
+
+          GIFT_VARIANT_IDS.forEach(function(gid) {
+            items.push({
+              id: gid,
+              quantity: 1,
+              properties: {
+                '_is_gift': 'true',
+                '_gift_group': state.variantId  // same key to identify the group
+              }
+            });
+          });
+
+          var petToggle = $('scc-petsuite-' + BID);
+          if (petToggle && petToggle.checked && petToggle.dataset.variantId) {
+            items.push({ id: parseInt(petToggle.dataset.variantId), quantity: 1 });
+          }
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: items.reverse() })
+          })
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            {% comment %} if (data.items || data.id) {
+              // Impulse cart drawer events
+              document.dispatchEvent(new CustomEvent('added-to-cart'));
+              document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+              // Fallback
+              var drawer = document.querySelector('.cart-popup, .cart-drawer, [data-cart-drawer]');
+              if (!drawer) window.location.href = '/cart';
+            } {% endcomment %}
+            if (data.items || data.id) {
+              document.dispatchEvent(new CustomEvent('added-to-cart'));
+              document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+              // Open YMQ cart drawer
+              var ymqTrigger = document.querySelector('.ymq-cart-app-open, [data-ymq-cart-open], .cart-count-bubble, .cart-link, [href="/cart"]');
+              if (ymqTrigger) {
+                ymqTrigger.click();
+              } else {
+                // Try YMQ custom event
+                document.dispatchEvent(new CustomEvent('ymq:open-cart'));
+                window.dispatchEvent(new CustomEvent('ymq:open-cart'));
+              }
+            }
+          })
+          .catch(function(e){ console.error('SCC cart error:', e); })
+          .finally(function(){
+            self.disabled = false;
+            self.querySelector('.scc-atc__label').textContent = 'Add To Cart';
+          });
+        });
+
+        // ── Step UI helpers ──
+        function collapseStep(n) {
+          var body    = $('scc-body'    + n + '-' + BID);
+          var summary = $('scc-summary' + n + '-' + BID);
+          if (body)    body.style.display = 'none';
+          if (summary) summary.style.display = 'block';
+        }
+        // Populate min price per seat option from variant data
+    var VARIANTS = {{ product.variants | json }};
+
+    function updateSeatsPrice() {
+      document.querySelectorAll('#scc-' + BID + ' .scc-seats-price').forEach(function(el){
+        var seats = el.dataset.seats;
+        var matching = VARIANTS.filter(function(v){ return v.option1 === seats; });
+        if (matching.length) {
+          var minPrice = Math.min.apply(null, matching.map(function(v){ return parseFloat(v.price); }));
+          el.textContent = '£' + (minPrice / 100).toFixed(2);
+        }
+      });
+    }
+    updateSeatsPrice();
+
+    function resetFromStep(fromStep) {
+      for (var i = fromStep; i <= 5; i++) {
+        var step = $('scc-step' + i + '-' + BID);
+        if (step) step.classList.add('scc-step--locked');
+        var badge = $('scc-badge' + i + '-' + BID);
+        if (badge) {
+          badge.classList.remove('scc-step__badge--done');
+          badge.classList.remove('scc-step__badge--active');
+          badge.innerHTML = i;
+        }
+        collapseStep(i);
+      }
+      atcBtn.disabled = true;
+      atcBtn.classList.remove('scc-atc--ready');
+    }
+
+    function filterColourSwatches() {
+      // Show only colours available for selected seats+logo combo
+      var seen = {};
+      document.querySelectorAll('#scc-' + BID + ' .scc-swatch').forEach(function(btn){
+        btn.style.display = 'none';
+      });
+      VARIANTS.forEach(function(v){
+        if (v.option1 === state.seats && v.option3 === state.logo) {
+          if (!seen[v.option2]) {
+            seen[v.option2] = true;
+            var swatch = document.querySelector(
+              '#scc-' + BID + ' .scc-swatch[data-color="' + v.option2 + '"]'
+            );
+            if (swatch) swatch.style.display = '';
+          }
+        }
+      });
+    }
+
+        function expandStep(n) {
+          var body    = $('scc-body'    + n + '-' + BID);
+          var summary = $('scc-summary' + n + '-' + BID);
+          if (body)    body.style.display = 'block';
+          if (summary) summary.style.display = 'none';
+        }
+        function unlockStep(n) {
+          var step = $('scc-step' + n + '-' + BID);
+          if (step) step.classList.remove('scc-step--locked');
+        }
+        function doneBadge(n) {
+          var badge = $('scc-badge' + n + '-' + BID);
+          if (!badge) return;
+          badge.classList.add('scc-step__badge--done');
+          badge.classList.remove('scc-step__badge--active');
+          badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+
+        // ── Accordion toggle on header click ──
+        document.querySelectorAll('#scc-' + BID + ' .scc-step__header').forEach(function(header){
+          header.addEventListener('click', function(){
+            var step = this.closest('.scc-step');
+            if (step.classList.contains('scc-step--locked')) return;
+            var n = step.dataset.step;
+            var body = $('scc-body' + n + '-' + BID);
+            if (body) {
+              var isOpen = body.style.display !== 'none';
+              if (isOpen) collapseStep(n); else expandStep(n);
+            }
+          });
+        });
+
+        // ── Countdown ──
+        var countdownEl = $('scc-countdown-' + BID);
+
+        if (countdownEl) {
+          var deadlineStr = countdownEl.dataset.deadline;
+
+          // Parse deadline as UK time (handles both GMT and BST automatically)
+          function getDeadlineUK(str) {
+            if (!str || str.length < 16) return new Date(NaN);
+            var year  = parseInt(str.substring(0, 4));
+            var month = parseInt(str.substring(5, 7)) - 1;
+            var day   = parseInt(str.substring(8, 10));
+            var hrs   = parseInt(str.substring(11, 13));
+            var mins  = parseInt(str.substring(14, 16));
+            var secs  = str.length >= 19 ? parseInt(str.substring(17, 19)) : 0;
+            // Treat input as UK local time (BST = UTC+1, GMT = UTC+0)
+            // Create in UTC first, then subtract UK offset
+            var utc = Date.UTC(year, month, day, hrs, mins, secs);
+            // Detect BST: last Sunday March to last Sunday October = UTC+1
+            var d = new Date(utc);
+            var jan = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            var jul = new Date(Date.UTC(d.getUTCFullYear(), 6, 1));
+            var stdOffset = Math.max(
+              -jan.getTimezoneOffset(),
+              -jul.getTimezoneOffset()
+            );
+            {% comment %} var ukOffsetMs = stdOffset * 60 * 1000;
+            return new Date(utc - ukOffsetMs); {% endcomment %}
+
+            // Always use UTC+1 for UK BST (May is always BST)
+            return new Date(utc - 60 * 60 * 1000);
+          }
+
+          var deadline = getDeadlineUK(deadlineStr);
+
+          function tick() {
+            var now = new Date().getTime();
+            var diff = deadline.getTime() - now;
+
+            if (diff <= 0) {
+              countdownEl.style.display = 'none';
+              return;
+            }
+
+            var hours   = Math.floor(diff / (1000 * 60 * 60));
+            var minutes = Math.floor((diff / (1000 * 60)) % 60);
+            var seconds = Math.floor((diff / 1000) % 60);
+
+            var pad = function(n) { return String(n).padStart(2, '0'); };
+
+            var hrsEl = countdownEl.querySelector('[data-hrs]');
+            var minEl = countdownEl.querySelector('[data-min]');
+            var secEl = countdownEl.querySelector('[data-sec]');
+
+            if (hrsEl) hrsEl.textContent = pad(hours);
+            if (minEl) minEl.textContent = pad(minutes);
+            if (secEl) secEl.textContent = pad(seconds);
+          }
+
+          tick();
+          setInterval(tick, 1000);
+        }
+
+      })();
+
+</script>
+
+
+{% comment %} add this schema in your main-product.liquid file in the block level{% endcomment %}
+{
+    "type": "seat_cover_configurator",
+    "name": "Seat Cover Configurator",
+    "settings": [
+        {
+          "type": "header",
+          "content": "Trust Bar"
+        },
+        {
+          "type": "image_picker",
+          "id": "trust_1_icon",
+          "label": "Trust 1 icon"
+        },
+        {
+          "type": "text",
+          "id": "trust_1_text",
+          "label": "Trust 1 text",
+          "default": "Guaranteed Fit"
+        },
+        {
+          "type": "image_picker",
+          "id": "trust_2_icon",
+          "label": "Trust 2 icon"
+        },
+        {
+          "type": "text",
+          "id": "trust_2_text",
+          "label": "Trust 2 text",
+          "default": "30-Day Risk Free Trial"
+        },
+        {
+          "type": "image_picker",
+          "id": "trust_3_icon",
+          "label": "Trust 3 icon"
+        },
+        {
+          "type": "text",
+          "id": "trust_3_text",
+          "label": "Trust 3 text",
+          "default": "3 Year Warranty"
+        },
+        {
+          "type": "header",
+          "content": "Banner & Countdown"
+        },
+        {
+          "type": "text",
+          "id": "banner_text",
+          "label": "Banner text",
+          "default": "Get Summer Ready Deal Ends In"
+        },
+        {
+          "type": "text",
+          "id": "countdown_end",
+          "label": "Countdown end date (ISO format)",
+          "default": "2025-08-31T23:59:59",
+          "info": "Format: YYYY-MM-DDTHH:MM:SS"
+        },
+        {
+          "type": "header",
+          "content": "Prize Banner"
+        },
+        {
+          "type": "text",
+          "id": "prize_text",
+          "label": "Prize headline",
+          "default": "Every $1 Spent = 1 Entry To Win $10K In Ultimate Prizes"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "gifts__headline",
+          "label": "Free Included Headline Prefix",
+          "default": "FREE Included Items"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "gifts__headline_second",
+          "label": "Free Included Second Line",
+          "default": "Every Seat Cover Order"
+        },
+        {
+          "type": "text",
+          "id": "prize_subtext",
+          "label": "Prize subtext",
+          "default": "FREE Included Items with Every Seat Cover Order"
+        },
+        {
+          "type": "header",
+          "content": "Free Gifts"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "free_title",
+          "label": "Gift FREE title",
+          "default": "FREE"
+        },
+        {
+          "type": "text",
+          "id": "gifts_total_value",
+          "label": "Total gifts value",
+          "default": "179"
+        },
+        {
+          "type": "image_picker",
+          "id": "gift_1_image",
+          "label": "Gift 1 image"
+        },
+        {
+          "type": "text",
+          "id": "gift_1_name",
+          "label": "Gift 1 name",
+          "default": "Steering Wheel Cover"
+        },
+        {
+          "type": "text",
+          "id": "gift_1_msrp",
+          "label": "Gift 1 MSRP",
+          "default": "39"
+        },
+        {
+          "type": "image_picker",
+          "id": "gift_2_image",
+          "label": "Gift 2 image"
+        },
+        {
+          "type": "text",
+          "id": "gift_2_name",
+          "label": "Gift 2 name",
+          "default": "2 x Seat Gap Fillers"
+        },
+        {
+          "type": "text",
+          "id": "gift_2_msrp",
+          "label": "Gift 2 MSRP",
+          "default": "20"
+        },
+        {
+          "type": "image_picker",
+          "id": "gift_3_image",
+          "label": "Gift 3 image"
+        },
+        {
+          "type": "text",
+          "id": "gift_3_name",
+          "label": "Gift 3 name",
+          "default": "Microfiber Towel"
+        },
+        {
+          "type": "text",
+          "id": "gift_3_msrp",
+          "label": "Gift 3 MSRP",
+          "default": "20"
+        },
+        {
+          "type": "image_picker",
+          "id": "gift_4_image",
+          "label": "Gift 4 image"
+        },
+        {
+          "type": "text",
+          "id": "gift_4_name",
+          "label": "Gift 4 name",
+          "default": "3 Year Warranty"
+        },
+        {
+          "type": "text",
+          "id": "gift_4_msrp",
+          "label": "Gift 4 MSRP",
+          "default": "100"
+        },
+        {
+          "type": "image_picker",
+          "id": "gift_5_image",
+          "label": "Gift 5 image"
+        },
+        {
+          "type": "text",
+          "id": "gift_5_name",
+          "label": "Gift 5 name",
+        },
+        {
+          "type": "text",
+          "id": "gift_5_msrp",
+          "label": "Gift 5 MSRP",
+        },
+        {
+          "type": "header",
+          "content": "Bundle Header"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "bundle_title",
+          "label": "Bundle Title",
+          "default": "CHOOSE YOUR SETUP"
+        },
+        {
+          "type": "header",
+          "content": "Setup Pricing"
+        },
+        {
+          "type": "number",
+          "id": "price_front_rear",
+          "label": "Front & Rear price",
+          "default": 389
+        },
+        {
+          "type": "number",
+          "id": "msrp_front_rear",
+          "label": "Front & Rear MSRP",
+          "default": 737
+        },
+        {
+          "type": "number",
+          "id": "price_front_only",
+          "label": "Front Only price",
+          "default": 279
+        },
+        {
+          "type": "number",
+          "id": "msrp_front_only",
+          "label": "Front Only MSRP",
+          "default": 458
+        },
+        {
+          "type": "number",
+          "id": "price_rear_only",
+          "label": "Rear Only price",
+          "default": 279
+        },
+        {
+          "type": "number",
+          "id": "msrp_rear_only",
+          "label": "Rear Only MSRP",
+          "default": 458
+        },
+        {
+          "type": "header",
+          "content": "PetSuite Upsell"
+        },
+        {
+          "type": "image_picker",
+          "id": "petsuite_image",
+          "label": "PetSuite image"
+        },
+        {
+          "type": "text",
+          "id": "petsuite_variant_id",
+          "label": "PetSuite variant ID",
+          "info": "Leave blank to hide the upsell. Get the variant ID from the product URL in Shopify admin."
+        },
+        {
+          "type": "number",
+          "id": "petsuite_price",
+          "label": "PetSuite sale price",
+          "default": 119
+        },
+        {
+          "type": "number",
+          "id": "petsuite_msrp",
+          "label": "PetSuite MSRP",
+          "default": 169
+        },
+        {
+          "type": "number",
+          "id": "petsuite_discount",
+          "label": "PetSuite discount %",
+          "default": 30
+        }
+    ]
+},
+
+{% comment %} If you want to remove all the gift product when you remove the main product
+ then add this script on the theme.liquid file before the </body> closing tag {% endcomment %}
+
+ <script>
+(function() {
+  var style = document.createElement('style');
+  style.textContent = '@keyframes scc-spin { to { transform: rotate(360deg); } }';
+  document.head.appendChild(style);
+
+  function showRemoving() {
+    if (document.getElementById('scc-removing-overlay')) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'scc-removing-overlay';
+    overlay.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><svg width="20" height="20" viewBox="0 0 50 50" style="animation:scc-spin 0.8s linear infinite"><circle cx="25" cy="25" r="20" fill="none" stroke="white" stroke-width="5" stroke-dasharray="80 20"/></svg><span>Updating cart...</span></div>';
+    overlay.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 24px;border-radius:8px;z-index:99999;font-size:14px;font-family:sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+    document.body.appendChild(overlay);
+  }
+
+  function hasMainProduct(cart) {
+    return cart.items.some(function(item) {
+      return !(item.properties && item.properties['_is_gift'] === 'true');
+    });
+  }
+
+  // Intercept remove clicks on cart page
+  document.addEventListener('click', function(e) {
+    var removeEl = e.target.closest('.scc-remove-item');
+    if (!removeEl) return;
+
+    // Only intercept if this is NOT a gift item itself
+    var isGift = removeEl.dataset.isGift === 'true';
+    if (isGift) return; // let gifts remove normally
+
+    e.preventDefault();
+    showRemoving();
+
+    var keyToRemove = removeEl.dataset.key;
+
+    // Step 1: fetch current cart to find all gift keys
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        var updates = {};
+
+        // Remove the main product
+        updates[keyToRemove] = 0;
+
+        // Check if this is the last non-gift item
+        var otherMainItems = cart.items.filter(function(item) {
+          return !(item.properties && item.properties['_is_gift'] === 'true')
+            && item.key !== keyToRemove;
+        });
+
+        // If no other main items, remove gifts too
+        if (otherMainItems.length === 0) {
+          cart.items.forEach(function(item) {
+            if (item.properties && item.properties['_is_gift'] === 'true') {
+              updates[item.key] = 0;
+            }
+          });
+        }
+
+        // Single update call — removes everything at once
+        return fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updates: updates })
+        });
+      })
+      .then(function() {
+        window.location.reload();
+      })
+      .catch(function(e) {
+        console.error('SCC remove error:', e);
+        window.location.reload();
+      });
+  });
+
+  // ── YMQ Cart Drawer remove intercept ──
+  document.addEventListener('click', function(e) {
+    var ymqRemove = e.target.closest('.ymq-cart-app-item-remove, [class*="ymq"][class*="remove"]');
+    if (!ymqRemove) return;
+
+    // Find which item is being removed
+    var itemEl = ymqRemove.closest('[data-product-id], [data-variant-id], [data-id]');
+    var productId = itemEl ? (itemEl.dataset.productId || itemEl.dataset.variantId || itemEl.dataset.id) : null;
+
+    // Check if it's a gift being removed (ignore) or main product
+    setTimeout(function() {
+      fetch('/cart.js')
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          var hasGifts = cart.items.some(function(item) {
+            return item.properties && item.properties['_is_gift'] === 'true';
+          });
+          if (!hasGifts) return;
+          if (hasMainProduct(cart)) return;
+
+          // Main product gone, remove all gifts
+          var updates = {};
+          cart.items.forEach(function(item) {
+            if (item.properties && item.properties['_is_gift'] === 'true') {
+              updates[item.key] = 0;
+            }
+          });
+          showRemoving();
+          fetch('/cart/update.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ updates: updates })
+          }).then(function() {
+            // Don't reload — just refresh the drawer
+            document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+            document.dispatchEvent(new CustomEvent('added-to-cart'));
+            setTimeout(function() {
+              var overlay = document.getElementById('scc-removing-overlay');
+              if (overlay) overlay.remove();
+            }, 800);
+          });
+        });
+    }, 600);
+  });
+
+})();
+</script>
