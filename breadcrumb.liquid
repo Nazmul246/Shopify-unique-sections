@@ -1,0 +1,626 @@
+{% comment %}
+  Breadcrumb Section for Shopify
+  Fully customizable via Theme Customizer
+  Works on: collection, product, page, blog, article, and all other pages
+{% endcomment %}
+
+{%- liquid
+  assign separator = section.settings.separator_character
+  assign font_size = section.settings.font_size
+  assign font_size_mobile = section.settings.font_size_mobile
+  assign text_color = section.settings.text_color
+  assign active_color = section.settings.active_color
+  assign separator_color = section.settings.separator_color
+  assign hover_color = section.settings.hover_color
+  assign bg_color = section.settings.background_color
+  assign section_padding_top = section.settings.padding_top
+  assign section_padding_bottom = section.settings.padding_bottom
+  assign item_spacing = section.settings.item_spacing
+  assign content_position = section.settings.content_position
+  assign section_width = section.settings.section_width
+  assign custom_max_width = section.settings.custom_max_width
+  assign show_home_icon = section.settings.show_home_icon
+  assign uppercase = section.settings.uppercase_text
+  assign font_weight = section.settings.font_weight
+  assign separator_size = section.settings.separator_size
+  assign border_bottom = section.settings.show_border_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign animate = section.settings.enable_animation
+-%}
+
+{%- capture breadcrumb_items -%}
+  {%- if section.settings.show_home -%}
+    <li class="breadcrumb__item breadcrumb__item--home">
+      <a href="{{ routes.root_url }}" class="breadcrumb__link" aria-label="{{ 'general.breadcrumbs.home' | t | default: 'Home' }}">
+        {%- if show_home_icon -%}
+          <svg class="breadcrumb__home-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          {%- if section.settings.show_home_text -%}
+            <span>{{ section.settings.home_label | default: 'Home' }}</span>
+          {%- endif -%}
+        {%- else -%}
+          <span>{{ section.settings.home_label | default: 'Home' }}</span>
+        {%- endif -%}
+      </a>
+    </li>
+  {%- endif -%}
+
+  {%- if template.name == 'collection' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ collection.title }}</span>
+    </li>
+
+  {%- elsif template.name == 'product' -%}
+    {%- assign current_collection = collection | default: product.collections.first -%}
+    {%- if current_collection -%}
+      {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+      <li class="breadcrumb__item">
+        <a href="{{ current_collection.url }}" class="breadcrumb__link">{{ current_collection.title }}</a>
+      </li>
+      <li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>
+    {%- else -%}
+      {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    {%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ product.title }}</span>
+    </li>
+
+  {%- elsif template.name == 'page' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ page.title }}</span>
+    </li>
+
+  {%- elsif template.name == 'blog' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ blog.title }}</span>
+    </li>
+
+  {%- elsif template.name == 'article' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item">
+      <a href="{{ blog.url }}" class="breadcrumb__link">{{ blog.title }}</a>
+    </li>
+    <li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ article.title }}</span>
+    </li>
+
+  {%- elsif template.name == 'cart' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ 'general.breadcrumbs.cart' | t | default: 'Cart' }}</span>
+    </li>
+
+  {%- elsif template.name == 'search' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ 'general.breadcrumbs.search' | t | default: 'Search' }}</span>
+    </li>
+
+  {%- elsif template.name == '404' -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">404 - Page Not Found</span>
+    </li>
+
+  {%- else -%}
+    {%- comment %} Fallback for any other template {% endcomment -%}
+    {%- if section.settings.show_home -%}<li class="breadcrumb__item breadcrumb__item--separator" aria-hidden="true"><span class="breadcrumb__separator">{{ separator }}</span></li>{%- endif -%}
+    <li class="breadcrumb__item breadcrumb__item--active" aria-current="page">
+      <span class="breadcrumb__current">{{ page_title }}</span>
+    </li>
+  {%- endif -%}
+{%- endcapture -%}
+
+<section
+  class="breadcrumb-section{% if animate %} breadcrumb-section--animate{% endif %}"
+  id="breadcrumb-{{ section.id }}"
+  aria-label="Breadcrumb"
+  style="
+    --bc-font-size: {{ font_size }}px;
+    --bc-font-size-mobile: {{ font_size_mobile }}px;
+    --bc-text-color: {{ text_color }};
+    --bc-active-color: {{ active_color }};
+    --bc-separator-color: {{ separator_color }};
+    --bc-hover-color: {{ hover_color }};
+    --bc-bg: {{ bg_color }};
+    --bc-pt: {{ section_padding_top }}px;
+    --bc-pb: {{ section_padding_bottom }}px;
+    --bc-gap: {{ item_spacing }}px;
+    --bc-separator-size: {{ separator_size }}px;
+    --bc-font-weight: {{ font_weight }};
+    --bc-border-color: {{ border_color }};
+    --bc-border-thickness: {{ border_thickness }}px;
+    {% if section_width == 'custom' %}--bc-max-width: {{ custom_max_width }}px;{% endif %}
+  "
+>
+  <div class="breadcrumb-section__outer breadcrumb-section__outer--{{ section_width }}">
+    <div class="breadcrumb-section__inner breadcrumb-section__inner--{{ content_position }}{% if border_bottom %} breadcrumb-section__inner--bordered{% endif %}">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <ol class="breadcrumb__list{% if uppercase %} breadcrumb__list--uppercase{% endif %}">
+          {{ breadcrumb_items }}
+        </ol>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* =========================================
+     BREADCRUMB SECTION — Core Styles
+     ========================================= */
+  .breadcrumb-section {
+    background-color: var(--bc-bg);
+    width: 100%;
+  }
+
+  /* ── Width Variants ── */
+  .breadcrumb-section__outer--full {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .breadcrumb-section__outer--wide {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .breadcrumb-section__outer--standard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .breadcrumb-section__outer--narrow {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .breadcrumb-section__outer--custom {
+    max-width: var(--bc-max-width, 1200px);
+    margin: 0 auto;
+    {% comment %} padding-left: 30px;
+    padding-right: 30px; {% endcomment %}
+  }
+
+  /* ── Inner: Padding + Alignment ── */
+  .breadcrumb-section__inner {
+    padding-top: var(--bc-pt);
+    padding-bottom: var(--bc-pb);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .breadcrumb-section__inner--left    { display: flex; justify-content: flex-start; }
+  .breadcrumb-section__inner--center  { display: flex; justify-content: center; }
+  .breadcrumb-section__inner--right   { display: flex; justify-content: flex-end; }
+
+  .breadcrumb-section__inner--bordered {
+    border-bottom: var(--bc-border-thickness) solid var(--bc-border-color);
+  }
+
+  /* ── Breadcrumb Nav ── */
+  .breadcrumb {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    row-gap: 6px;
+  }
+
+  .breadcrumb__list--uppercase .breadcrumb__link,
+  .breadcrumb__list--uppercase .breadcrumb__current {
+    text-transform: uppercase;
+  }
+
+  /* ── Breadcrumb Items ── */
+  .breadcrumb__item {
+    display: flex;
+    align-items: center;
+    font-size: var(--bc-font-size);
+    font-weight: var(--bc-font-weight);
+    letter-spacing: var(--bc-letter-spacing);
+    line-height: 1.4;
+  }
+
+  .breadcrumb__item--separator {
+    padding: 0 var(--bc-gap);
+    user-select: none;
+  }
+
+  /* ── Links ── */
+  .breadcrumb__link {
+    color: var(--bc-text-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .breadcrumb__link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--bc-hover-color);
+    transition: width 0.25s ease;
+  }
+
+  .breadcrumb__link:hover {
+    color: var(--bc-hover-color);
+  }
+
+  .breadcrumb__link:hover::after {
+    width: 100%;
+  }
+
+  /* ── Active / Current ── */
+  .breadcrumb__item--active .breadcrumb__current {
+    color: var(--bc-active-color);
+    font-weight: 700;
+  }
+
+  /* ── Separator ── */
+  .breadcrumb__separator {
+    color: var(--bc-separator-color);
+    font-size: var(--bc-separator-size);
+    line-height: 1;
+    display: inline-block;
+  }
+
+  /* ── Home Icon ── */
+  .breadcrumb__home-icon {
+    width: calc(var(--bc-font-size) * 1.1);
+    height: calc(var(--bc-font-size) * 1.1);
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+
+  /* ── Animation ── */
+  .breadcrumb-section--animate .breadcrumb__item {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: bcFadeUp 0.4s ease forwards;
+  }
+
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(1) { animation-delay: 0.05s; }
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(2) { animation-delay: 0.12s; }
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(3) { animation-delay: 0.19s; }
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(4) { animation-delay: 0.26s; }
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(5) { animation-delay: 0.33s; }
+  .breadcrumb-section--animate .breadcrumb__item:nth-child(6) { animation-delay: 0.40s; }
+
+  @keyframes bcFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================
+     RESPONSIVE — Mobile
+     ========================================= */
+  @media (max-width: 749px) {
+    .breadcrumb-section__outer--wide,
+    .breadcrumb-section__outer--standard,
+    .breadcrumb-section__outer--narrow,
+    .breadcrumb-section__outer--custom {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .breadcrumb__item {
+      font-size: var(--bc-font-size-mobile);
+    }
+
+    /* Collapse long breadcrumbs: show first + last only */
+    .breadcrumb__list {
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .breadcrumb__item:not(.breadcrumb__item--home):not(.breadcrumb__item--active):not(.breadcrumb__item--separator) {
+      display: none;
+    }
+
+    /* Show ellipsis separator when items are hidden */
+    .breadcrumb__item--home + .breadcrumb__item--separator {
+      display: flex;
+    }
+
+    /* Keep home + separator + active always visible */
+    .breadcrumb__item--home,
+    .breadcrumb__item--active {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .breadcrumb__item--active .breadcrumb__current {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 60vw;
+      display: inline-block;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Breadcrumb",
+  "tag": "section",
+  "class": "shopify-breadcrumb-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📐 Section Width"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section Width",
+      "options": [
+        { "value": "full", "label": "Full Width" },
+        { "value": "wide", "label": "Wide (1400px)" },
+        { "value": "standard", "label": "Standard (1200px)" },
+        { "value": "narrow", "label": "Narrow (960px)" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "range",
+      "id": "custom_max_width",
+      "label": "Custom Max Width (px)",
+      "min": 400,
+      "max": 2000,
+      "step": 20,
+      "default": 1200,
+      "info": "Only applies when Section Width is set to 'Custom'"
+    },
+    {
+      "type": "header",
+      "content": "📍 Content Position"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Breadcrumb Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "🔤 Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (Desktop)",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size (Mobile)",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font Weight",
+      "options": [
+        { "value": "300", "label": "Light (300)" },
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase_text",
+      "label": "Uppercase Text",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "↔️ Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "label": "Item Spacing (gap between separator and text)",
+      "min": 2,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "🎨 Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Link / Inactive Text Color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "hover_color",
+      "label": "Link Hover Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Active Page Color (current page)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "➗ Separator"
+    },
+    {
+      "type": "select",
+      "id": "separator_character",
+      "label": "Separator Style",
+      "options": [
+        { "value": "/", "label": "Slash  /" },
+        { "value": "\\", "label": "Backslash  \\" },
+        { "value": ">", "label": "Arrow  >" },
+        { "value": "›", "label": "Chevron  ›" },
+        { "value": "»", "label": "Double Chevron  »" },
+        { "value": "•", "label": "Dot  •" },
+        { "value": "–", "label": "Dash  –" },
+        { "value": "|", "label": "Pipe  |" }
+      ],
+      "default": "/"
+    },
+    {
+      "type": "range",
+      "id": "separator_size",
+      "label": "Separator Size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "🏠 Home Item"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home",
+      "label": "Show Home Link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home Label Text",
+      "default": "HOME",
+      "info": "Text shown for the home breadcrumb item"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home_icon",
+      "label": "Show Home Icon",
+      "default": false,
+      "info": "Replaces or accompanies home text with a house icon"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home_text",
+      "label": "Show Home Text (when icon is enabled)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "─── Border"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border_bottom",
+      "label": "Show Bottom Border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "label": "Border Thickness",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "✨ Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable Fade-in Animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb",
+      "category": "Navigation"
+    }
+  ]
+}
+{% endschema %}

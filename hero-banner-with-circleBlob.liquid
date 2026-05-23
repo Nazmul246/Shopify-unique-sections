@@ -1,0 +1,783 @@
+{% comment %}
+  KidsFry — About Hero Section
+  Theme: Minimig
+  Section: kidsfry-about-hero
+{% endcomment %}
+
+<style>
+  #kidsfry-hero-{{ section.id }} {
+    --kf-accent:       {{ section.settings.accent_color }};
+    --kf-accent2:      {{ section.settings.accent2_color }};
+    --kf-bg:           {{ section.settings.bg_color }};
+    --kf-text:         {{ section.settings.text_color }};
+    --kf-sub-text:     {{ section.settings.subtext_color }};
+    --kf-btn-bg:       {{ section.settings.btn_bg_color }};
+    --kf-btn-text:     {{ section.settings.btn_text_color }};
+    --kf-btn-hover:    {{ section.settings.btn_hover_color }};
+    --kf-badge-bg:     {{ section.settings.badge_bg_color }};
+    --kf-badge-text:   {{ section.settings.badge_text_color }};
+    --kf-stat-border:  {{ section.settings.stat_border_color }};
+    --kf-stat-num:     {{ section.settings.stat_number_color }};
+    --kf-tag-bg:       {{ section.settings.float_tag_bg }};
+    --kf-tag-text:     {{ section.settings.float_tag_text_color }};
+    --kf-blob-from:    {{ section.settings.blob_gradient_from }};
+    --kf-blob-to:      {{ section.settings.blob_gradient_to }};
+
+    --kf-badge-fs:     {{ section.settings.badge_font_size }}px;
+    --kf-title-fs-min: {{ section.settings.title_font_size_min }}px;
+    --kf-title-fs-max: {{ section.settings.title_font_size_max }}px;
+    --kf-sub-fs:       {{ section.settings.sub_font_size }}px;
+    --kf-btn-fs:       {{ section.settings.btn_font_size }}px;
+    --kf-stat-num-fs:  {{ section.settings.stat_number_font_size }}px;
+    --kf-stat-label-fs:{{ section.settings.stat_label_font_size }}px;
+    --kf-float-fs:     {{ section.settings.float_tag_font_size }}px;
+
+    --kf-max-width:    {{ section.settings.max_width }}px;
+    --kf-pt:           {{ section.settings.padding_top }}px;
+    --kf-pb:           {{ section.settings.padding_bottom }}px;
+    --kf-gap:          {{ section.settings.column_gap }}px;
+    --kf-btn-radius:   {{ section.settings.btn_border_radius }}px;
+    --kf-stat-radius:  {{ section.settings.stat_border_radius }}px;
+    --kf-blob-size:    {{ section.settings.blob_size }}px;
+  }
+
+  /* ── Reset & Base ── */
+  #kidsfry-hero-{{ section.id }} *,
+  #kidsfry-hero-{{ section.id }} *::before,
+  #kidsfry-hero-{{ section.id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Section Wrapper ── */
+  #kidsfry-hero-{{ section.id }} {
+    background: var(--kf-bg);
+    padding: var(--kf-pt) 6% var(--kf-pb);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Decorative bubbles ── */
+  #kidsfry-hero-{{ section.id }}::before {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    background: var(--kf-accent);
+    border-radius: 50%;
+    top: -140px;
+    right: -100px;
+    opacity: 0.13;
+    pointer-events: none;
+  }
+  #kidsfry-hero-{{ section.id }}::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    background: var(--kf-accent2);
+    border-radius: 50%;
+    bottom: -80px;
+    left: -60px;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  /* ── Inner grid ── */
+  #kidsfry-hero-{{ section.id }} .kf-inner {
+    max-width: var(--kf-max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--kf-gap);
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Badge ── */
+  #kidsfry-hero-{{ section.id }} .kf-badge {
+    display: inline-block;
+    background: var(--kf-badge-bg);
+    color: var(--kf-badge-text);
+    font-size: var(--kf-badge-fs);
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 50px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Heading ── */
+  #kidsfry-hero-{{ section.id }} .kf-title {
+    font-size: clamp(var(--kf-title-fs-min), 4vw, var(--kf-title-fs-max));
+    font-weight: 900;
+    line-height: 1;
+    color: var(--kf-text);
+    margin-top: 10px;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-title span {
+    color: var(--kf-accent2);
+    margin-left: 5px;
+  }
+
+  /* ── Subtitle ── */
+  #kidsfry-hero-{{ section.id }} .kf-sub {
+    font-size: var(--kf-sub-fs);
+    color: var(--kf-sub-text);
+    line-height: 1.75;
+    max-width: 520px;
+    margin: 16px 0 26px;
+  }
+
+  /* ── CTA Button ── */
+  #kidsfry-hero-{{ section.id }} .kf-btn {
+    display: inline-block;
+    background: var(--kf-btn-bg);
+    color: var(--kf-btn-text);
+    font-weight: 800;
+    font-size: var(--kf-btn-fs);
+    padding: 13px 40px;
+    border-radius: var(--kf-btn-radius);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  }
+  #kidsfry-hero-{{ section.id }} .kf-btn:hover {
+    background: var(--kf-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  }
+
+  /* ── Stat boxes ── */
+  #kidsfry-hero-{{ section.id }} .kf-stats {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-stat {
+    background: #fff;
+    border: 2px dashed var(--kf-stat-border);
+    border-radius: var(--kf-stat-radius);
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 90px;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-stat strong {
+    display: block;
+    font-size: var(--kf-stat-num-fs);
+    font-weight: 900;
+    color: var(--kf-stat-num);
+    line-height: 1.1;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-stat span {
+    font-size: var(--kf-stat-label-fs);
+    color: #000000;s
+    font-weight: 600;
+  }
+
+  /* ── Image / Blob side ── */
+  #kidsfry-hero-{{ section.id }} .kf-img-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #kidsfry-hero-{{ section.id }} .kf-blob {
+    width: var(--kf-blob-size);
+    height: var(--kf-blob-size);
+    background: linear-gradient(135deg, var(--kf-blob-from) 0%, var(--kf-blob-to) 100%);
+    border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: kf-morph 8s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-blob img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+
+  @keyframes kf-morph {
+    0%, 100% { border-radius: 60% 40% 55% 45% / 45% 55% 40% 60%; }
+    33%       { border-radius: 45% 55% 40% 60% / 60% 40% 55% 45%; }
+    66%       { border-radius: 55% 45% 60% 40% / 40% 60% 45% 55%; }
+  }
+
+  /* ── Floating tags ── */
+  #kidsfry-hero-{{ section.id }} .kf-float {
+    position: absolute;
+    background: var(--kf-tag-bg);
+    border-radius: 50px;
+    padding: 9px 16px;
+    font-size: var(--kf-float-fs);
+    font-weight: 800;
+    color: var(--kf-tag-text);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.10);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    animation: kf-float 3s ease-in-out infinite;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-float.t1 {
+    top: 32px;
+    right: -8px;
+    animation-delay: 0s;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-float.t2 {
+    bottom: 48px;
+    left: -8px;
+    animation-delay: 1.5s;
+  }
+  @keyframes kf-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+  }
+
+  /* ── Dot indicators ── */
+  #kidsfry-hero-{{ section.id }} .kf-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  #kidsfry-hero-{{ section.id }} .kf-dot-g { background: #4caf50; }
+  #kidsfry-hero-{{ section.id }} .kf-dot-y { background: var(--kf-accent); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #kidsfry-hero-{{ section.id }} .kf-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    #kidsfry-hero-{{ section.id }} .kf-blob {
+      width: 100%;
+      height: 100%;
+    }
+    #kidsfry-hero-{{ section.id }} .kf-float.t1 {
+        right: 0;
+        top: -22px;
+    }
+    #kidsfry-hero-{{ section.id }} .kf-float.t2 {
+        left: 0;
+        bottom: 0px;
+  }
+  .kf-text {
+        order: 1 !important;
+  }
+
+   /* ── Heading ── */
+  #kidsfry-hero-{{ section.id }} .kf-title {
+    font-size: 40px;
+
+  }
+</style>
+
+<section id="kidsfry-hero-{{ section.id }}" class="kidsfry-about-hero">
+  <div class="kf-inner">
+    <!-- ── Left: Text Column ── -->
+    <div class="kf-text">
+      {% if section.settings.badge_text != blank %}
+        <div class="kf-badge m-section__subheading_custom">
+          {{ section.settings.badge_icon }}
+          {{ section.settings.badge_text }}
+        </div>
+      {% endif %}
+
+      <h1 class="kf-title">
+        {{ section.settings.heading_line1_before -}}
+        <span>{{ section.settings.heading_line1_highlight }}</span>{{ section.settings.heading_line1_after -}}
+        <br>
+        {{ section.settings.heading_line2_before -}}
+        <span>{{ section.settings.heading_line2_highlight }}</span>{{ section.settings.heading_line2_after }}
+      </h1>
+
+      {% if section.settings.subtext != blank %}
+        <p class="kf-sub">{{ section.settings.subtext }}</p>
+      {% endif %}
+
+      {% if section.settings.btn_label != blank %}
+        <a href="{{ section.settings.btn_link }}" class="kf-btn">
+          {{ section.settings.btn_label }}
+        </a>
+      {% endif %}
+
+      <!-- Stat Boxes -->
+      {% if section.settings.show_stats %}
+        <div class="kf-stats">
+          {% for block in section.blocks %}
+            {% if block.type == 'stat' %}
+              <div class="kf-stat" {{ block.shopify_attributes }}>
+                <strong>{{ block.settings.stat_value }}</strong>
+                <span>{{ block.settings.stat_label }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ── Right: Image / Blob Column ── -->
+    <div class="kf-img-wrap">
+      <div class="kf-blob">
+        {% if section.settings.hero_image != blank %}
+          <img
+            src="{{ section.settings.hero_image | image_url: width: 760 }}"
+            alt="{{ section.settings.hero_image.alt | default: 'KidsFry Hero' }}"
+            width="{{ section.settings.blob_size }}"
+            height="{{ section.settings.blob_size }}"
+            loading="eager"
+          >
+        {% else %}
+          <span style="font-size: calc(var(--kf-blob-size) * 0.25);">👧</span>
+        {% endif %}
+      </div>
+
+      <!-- Float Tag 1 -->
+      {% if section.settings.tag1_text != blank %}
+        <div class="kf-float t1">
+          <span class="kf-dot kf-dot-g"></span>
+          {{ section.settings.tag1_text }}
+        </div>
+      {% endif %}
+
+      <!-- Float Tag 2 -->
+      {% if section.settings.tag2_text != blank %}
+        <div class="kf-float t2">
+          <span class="kf-dot kf-dot-y"></span>
+          {{ section.settings.tag2_text }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "KidsFry – About Hero",
+  "tag": "section",
+  "class": "kidsfry-about-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📐 Layout & Spacing"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section Max Width (px)",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "default": 1160
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column Gap (px)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "default": 56
+    },
+
+    {
+      "type": "header",
+      "content": "🎨 Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fffbf0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Primary)",
+      "default": "#ffd93d"
+    },
+    {
+      "type": "color",
+      "id": "accent2_color",
+      "label": "Accent Color 2 / Highlight",
+      "default": "#f5a623"
+    },
+
+    {
+      "type": "header",
+      "content": "🔖 Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_icon",
+      "label": "Badge Icon / Emoji",
+      "default": "✦"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Our Story"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background",
+      "default": "#ffd93d"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#7a4f00"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Badge Font Size (px)",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 11
+    },
+
+    {
+      "type": "header",
+      "content": "✍️ Heading & Text"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1_before",
+      "label": "Line 1 — Text Before Highlight",
+      "default": "Born From "
+    },
+    {
+      "type": "text",
+      "id": "heading_line1_highlight",
+      "label": "Line 1 — Highlighted Word",
+      "default": "Love"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1_after",
+      "label": "Line 1 — Text After Highlight",
+      "default": ","
+    },
+    {
+      "type": "text",
+      "id": "heading_line2_before",
+      "label": "Line 2 — Text Before Highlight",
+      "default": "Stitched With "
+    },
+    {
+      "type": "text",
+      "id": "heading_line2_highlight",
+      "label": "Line 2 — Highlighted Word",
+      "default": "Joy"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2_after",
+      "label": "Line 2 — Text After Highlight",
+      "default": "2 lin"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_min",
+      "label": "Heading Min Font Size (px)",
+      "min": 18,
+      "max": 40,
+      "step": 1,
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_max",
+      "label": "Heading Max Font Size (px)",
+      "min": 28,
+      "max": 80,
+      "step": 1,
+      "default": 42
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext / Description",
+      "default": "KidsFry started with one simple idea — every child deserves clothes that let them run, jump, laugh, and grow without limits. We design every piece with the same love a parent packs into a lunchbox."
+    },
+    {
+      "type": "range",
+      "id": "sub_font_size",
+      "label": "Subtext Font Size (px)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "default": 15
+    },
+
+    {
+      "type": "header",
+      "content": "🔘 Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Shop the Collection →"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background",
+      "default": "#ffd93d"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#3a2a00"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_color",
+      "label": "Button Hover Color",
+      "default": "#f5c400"
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button Font Size (px)",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_border_radius",
+      "label": "Button Border Radius (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "📊 Stats Row"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show Stats",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "stat_border_color",
+      "label": "Stat Box Border Color",
+      "default": "#ffd93d"
+    },
+    {
+      "type": "color",
+      "id": "stat_number_color",
+      "label": "Stat Number Color",
+      "default": "#f5a623"
+    },
+    {
+      "type": "range",
+      "id": "stat_number_font_size",
+      "label": "Stat Number Font Size (px)",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "stat_label_font_size",
+      "label": "Stat Label Font Size (px)",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "stat_border_radius",
+      "label": "Stat Box Border Radius (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 16
+    },
+
+    {
+      "type": "header",
+      "content": "🖼️ Hero Image & Blob"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image (replaces emoji)"
+    },
+    {
+      "type": "range",
+      "id": "blob_size",
+      "label": "Blob / Image Size (px)",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "default": 380
+    },
+    {
+      "type": "color",
+      "id": "blob_gradient_from",
+      "label": "Blob Gradient Start",
+      "default": "#ffd93d"
+    },
+    {
+      "type": "color",
+      "id": "blob_gradient_to",
+      "label": "Blob Gradient End",
+      "default": "#f5a623"
+    },
+
+    {
+      "type": "header",
+      "content": "🏷️ Floating Tags"
+    },
+    {
+      "type": "text",
+      "id": "tag1_text",
+      "label": "Floating Tag 1 Text",
+      "default": "Certified Safe Fabrics"
+    },
+    {
+      "type": "text",
+      "id": "tag2_text",
+      "label": "Floating Tag 2 Text",
+      "default": "Free Shipping on $50+"
+    },
+    {
+      "type": "color",
+      "id": "float_tag_bg",
+      "label": "Float Tag Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "float_tag_text_color",
+      "label": "Float Tag Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "float_tag_font_size",
+      "label": "Float Tag Font Size (px)",
+      "min": 9,
+      "max": 16,
+      "step": 1,
+      "default": 12
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat Box",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "Stat Value",
+          "default": "100K+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Stat Label",
+          "default": "Happy Kids"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "KidsFry – About Hero",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "100K+",
+            "stat_label": "Happy Kids"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "4.9★",
+            "stat_label": "Avg Rating"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_value": "98%",
+            "stat_label": "Satisfaction"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
