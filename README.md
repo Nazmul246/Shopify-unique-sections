@@ -171,13 +171,8 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Comparison Table](./previews/comparison-table.png)
-> ```
+> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0710/8204/9605/files/screencapture-127-0-0-1-5500-index-html-2026-05-23-11_01_47.png?v=1779512533)
+
 
 **Description:** A feature comparison table for showcasing differences between product tiers, plans, or variants side by side.
 
@@ -198,10 +193,6 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
 > ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0710/8204/9605/files/FAQ-image-liquid.png?v=1779511928)
 
 **Description:** An accordion-style FAQ section for answering common customer questions directly on product or landing pages.
