@@ -304,24 +304,73 @@
         <div class="scc-colors" id="scc-color-swatches-{{ block.id }}">
           {%- assign seen_colors = '' -%}
           {%- for variant in product.variants -%}
-            {%- unless seen_colors contains variant.option2 -%}
+            {%- assign color_slug = variant.option2 | handleize -%}
+            {%- assign slug_check = '|' | append: color_slug | append: '|' -%}
+
+            {% comment %} if you dont want to show the variant block which has no featured image then uncomment this unless {% endcomment %}
+            {% comment %} {%- unless seen_colors contains slug_check -%}
               {%- if variant.featured_image -%}
+
+                {%- comment %} Find mat material swatch from metafield across all same-color variants {%- endcomment %}
+                {%- assign swatch_src = variant.featured_image | img_url: '80x80', crop: 'center' -%}
+
+                {%- for other_variant in product.variants -%}
+                  {%- if other_variant.option2 == variant.option2 -%}
+                    {%- if other_variant.metafields.custom.mat_material != blank -%}
+                      {%- assign swatch_src = other_variant.metafields.custom.mat_material | img_url: '80x80', crop: 'center' -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+
                 <button
                   type="button"
                   class="scc-swatch"
                   data-color="{{ variant.option2 }}"
-                  data-image="{{ variant.featured_image | img_url: '800x800' }}"
+                  data-image="{{ variant.featured_image.src | img_url: '800x800' }}"
                   aria-label="{{ variant.option2 }}"
                   title="{{ variant.option2 }}"
                 >
                   <img
-                    src="{{ variant.featured_image | img_url: '80x80', crop: 'center' }}"
+                    src="{{ swatch_src }}"
                     alt="{{ variant.option2 }}"
                     loading="lazy"
                   >
                 </button>
-                {%- assign seen_colors = seen_colors | append: variant.option2 | append: '|' -%}
+                {%- assign seen_colors = seen_colors | append: slug_check -%}
               {%- endif -%}
+            {%- endunless -%} {% endcomment %}
+
+            {%- unless seen_colors contains slug_check -%}
+              {%- assign seen_colors = seen_colors | append: slug_check -%}
+              {%- assign bg_colors = '#E74C3C,#3498DB,#2ECC71,#F39C12,#9B59B6,#1ABC9C,#E67E22,#E91E63' | split: ',' -%}
+              {%- assign bg_index = forloop.index0 | modulo: 8 -%}
+              {%- assign rand_color = bg_colors[bg_index] -%}
+              <button
+                type="button"
+                class="scc-swatch"
+                data-color="{{ variant.option2 }}"
+                data-image="{% if variant.featured_image %}{{ variant.featured_image.src | img_url: '800x800' }}{% endif %}"
+                aria-label="{{ variant.option2 }}"
+                title="{{ variant.option2 }}"
+              >
+                {%- if variant.featured_image -%}
+                  {%- assign swatch_src = variant.featured_image.src | img_url: '80x80', crop: 'center' -%}
+                  {%- for other_variant in product.variants -%}
+                    {%- if other_variant.option2 == variant.option2 -%}
+                      {%- if other_variant.metafields.custom.mat_material != blank -%}
+                        {%- assign swatch_src = other_variant.metafields.custom.mat_material | img_url: '80x80', crop: 'center' -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  <img src="{{ swatch_src }}" alt="{{ variant.option2 }}" loading="lazy">
+                {%- else -%}
+                  <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-weight:700;font-size:26px;color:#fff;background:{{ rand_color }};border-radius:50%;">
+                    {{ variant.option2 | slice: 0 | upcase }}
+                  </span>
+                {%- endif -%}
+              </button>
             {%- endunless -%}
           {%- endfor -%}
         </div>
@@ -523,6 +572,19 @@
         // Update min price display for selected seat
         updateSeatsPrice();
         $('scc-setup-text-' + BID).textContent = state.seats;
+        // Update native price block with min price for selected seats
+        var seatVariants = VARIANTS.filter(function(v){ return v.option1 === state.seats; });
+        if (seatVariants.length) {
+          var minV = seatVariants.reduce(function(a, b){ return parseFloat(a.price) < parseFloat(b.price) ? a : b; });
+          var fPrice = '£' + (parseFloat(minV.price) / 100).toFixed(2);
+          var fCompare = '£' + (parseFloat(minV.compare_at_price) / 100).toFixed(2);
+          var nativePrice = document.querySelector('[data-product-price]');
+          var nativeCompare = document.querySelector('[data-compare-price]');
+          var nativeCompareWrap = document.querySelector('[data-product-price-wrap]');
+          if (nativePrice) { nativePrice.textContent = fPrice; nativePrice.classList.add('on-sale'); }
+          if (nativeCompare) nativeCompare.textContent = fCompare;
+          if (nativeCompareWrap) nativeCompareWrap.classList.remove('hide');
+        }
         // Reset downstream
         state.logo = ''; state.color = ''; state.variantId = '';
         resetFromStep(3);
@@ -539,6 +601,19 @@
         });
         this.closest('.scc-setup-option').classList.add('scc-setup-option--selected');
         $('scc-logo-text-' + BID).textContent = state.logo;
+        // Update native price block with min price for seats + logo combo
+        var logoVariants = VARIANTS.filter(function(v){ return v.option1 === state.seats && v.option3 === state.logo; });
+        if (logoVariants.length) {
+          var minLV = logoVariants.reduce(function(a, b){ return parseFloat(a.price) < parseFloat(b.price) ? a : b; });
+          var fPriceL = '£' + (parseFloat(minLV.price) / 100).toFixed(2);
+          var fCompareL = '£' + (parseFloat(minLV.compare_at_price) / 100).toFixed(2);
+          var nativePriceL = document.querySelector('[data-product-price]');
+          var nativeCompareL = document.querySelector('[data-compare-price]');
+          var nativeCompareWrapL = document.querySelector('[data-product-price-wrap]');
+          if (nativePriceL) { nativePriceL.textContent = fPriceL; nativePriceL.classList.add('on-sale'); }
+          if (nativeCompareL) nativeCompareL.textContent = fCompareL;
+          if (nativeCompareWrapL) nativeCompareWrapL.classList.remove('hide');
+        }
         // Filter colour swatches based on seats+logo
         filterColourSwatches();
         collapseStep(3); unlockStep(4); expandStep(4); doneBadge(3);
@@ -615,10 +690,65 @@
           }
 
             // Gallery sync
-            var newSrc = this.dataset.image;
+            {% comment %} var newSrc = this.dataset.image;
+            var targetColor = this.dataset.color;
+
             if (newSrc && newSrc !== 'undefined') {
-              var featImg = document.querySelector('.product-image-main img, .product__media img');
-              if (featImg) { featImg.src = newSrc; featImg.srcset = ''; }
+              // Find the slide whose img src contains the same media ID as the swatch
+              var allSlides = document.querySelectorAll('.product-main-slide');
+              var targetIndex = null;
+
+              allSlides.forEach(function(slide) {
+                var img = slide.querySelector('img');
+                if (img && (img.src.includes(newSrc.split('/')[newSrc.split('/').length - 1].split('?')[0]) || img.getAttribute('src') === newSrc)) {
+                  targetIndex = slide.dataset.index;
+                }
+              });
+
+              if (targetIndex !== null) {
+                // Trigger Impulse's native thumb click to switch slide properly
+                var thumb = document.querySelector('.product__thumb[data-index="' + targetIndex + '"]');
+                if (thumb) {
+                  thumb.click();
+                }
+              } else {
+                // Fallback: update the currently visible slide's img directly
+                var activeSlide = document.querySelector('.product-main-slide.starting-slide, .product-main-slide.is-active');
+                if (activeSlide) {
+                  var img = activeSlide.querySelector('img');
+                  if (img) { img.src = newSrc; img.srcset = ''; }
+                }
+              }
+            } {% endcomment %}
+
+            var newSrc = this.dataset.image;
+
+            if (newSrc && newSrc !== 'undefined') {
+              var allSlides = document.querySelectorAll('.product-main-slide');
+              var targetIndex = null;
+              var newSrcFile = newSrc.split('?')[0].split('/').pop().split('_')[0];
+
+              allSlides.forEach(function(slide) {
+                var img = slide.querySelector('img');
+                if (img) {
+                  var slideSrcFile = (img.getAttribute('src') || '').split('?')[0].split('/').pop().split('_')[0];
+                  if (slideSrcFile === newSrcFile) {
+                    targetIndex = parseInt(slide.dataset.index);
+                  }
+                }
+              });
+
+              if (targetIndex !== null) {
+                // Use Flickity API directly
+                var slider = document.querySelector('#ProductPhotos-' + {{ section.id | json }});
+                if (slider && slider.flickity) {
+                  slider.flickity('select', targetIndex);
+                } else {
+                  // Fallback to thumb click
+                  var thumb = document.querySelector('.product__thumb[data-index="' + targetIndex + '"]');
+                  if (thumb) thumb.click();
+                }
+              }
             }
 
             doneBadge(4); unlockStep(5); expandStep(5);
