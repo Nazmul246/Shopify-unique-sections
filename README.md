@@ -336,8 +336,6 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 > 🖼️ **Preview image coming soon**
 >
-> Replace this block with your actual screenshot:
->
 > 
 > ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0705/4678/4330/files/Hero-banner.png?v=1777449604)
 > 
