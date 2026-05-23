@@ -133,13 +133,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Category Slider](./previews/category-slider.png)
-> ```
+> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0710/8204/9605/files/slider-3d.png?v=1779513732)
 
 **Description:** A horizontally scrollable category navigation slider that lets customers browse collections with image thumbnails and labels.
 
