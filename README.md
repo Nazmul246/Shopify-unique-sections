@@ -4,7 +4,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 ## 👤 Author
 
-**Nazmul Islam** — [Md. Nazmul Islam Nayem](https://github.com/Nazmul246)
+**Nazmul Islam** — [Md. Nazmul Islam Nayem](https://github.com/Nazmul246) <br>
 **Jahangir Alam** — [Jahangir Alam](https://github.com/jahangiralom99)
 
 ---
