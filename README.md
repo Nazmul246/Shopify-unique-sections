@@ -2,14 +2,14 @@
 
 A curated collection of custom Shopify Liquid sections designed to enhance storefront UI with unique, reusable components. Each section is standalone and plug-and-play ready for any Shopify theme.
 
-## 👤 Author
+## <img src="https://cdn.shopify.com/s/files/1/0612/3621/5910/files/man.png?v=1779516143" width="30" height="30"> Author
 
 **Nazmul Islam** — [Md. Nazmul Islam Nayem](https://github.com/Nazmul246) <br>
 **Jahangir Alam** — [Jahangir Alam](https://github.com/jahangiralom99)
 
 ---
 
-## 📦 Sections Overview
+## <img src="https://cdn.shopify.com/s/files/1/0612/3621/5910/files/brackets.png?v=1779516594" width="30" height="30"> Sections Overview
 
 | File                                                               | Description                                |
 | ------------------------------------------------------------------ | ------------------------------------------ |
@@ -29,7 +29,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 ---
 
-## 🔍 Section Previews
+## <img src="https://cdn.shopify.com/s/files/1/0612/3621/5910/files/view.png?v=1779516711" width="30" height="30"> Section Previews
 
 > Click the arrow on any section below to expand and preview the visual design.
 
@@ -41,7 +41,6 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 <summary>📸 Click to preview — <code>about-story-section.liquid</code></summary>
 
 <br>
-
 
 > ![About Story Section](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/about-1.png?v=1779513031)
 
