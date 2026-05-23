@@ -29,7 +29,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 ---
 
-## <img src="https://cdn.shopify.com/s/files/1/0612/3621/5910/files/view.png?v=1779516711" width="30" height="30"> Section Previews
+## <img src="https://cdn.shopify.com/s/files/1/0612/3621/5910/files/view.png?v=1779516711" width="20" height="20"> Section Previews
 
 > Click the arrow on any section below to expand and preview the visual design.
 
