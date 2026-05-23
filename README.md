@@ -191,13 +191,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Flipcard for Gifts](./previews/flipcard-for-gifts.png)
-> ```
+> ![Flipcard for Gifts](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Flip_to_win.png?v=1779514363)
 
 **Description:** An interactive flip card component designed for gift or product showcases. Cards flip on hover/tap to reveal details on the back.
 
