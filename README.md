@@ -69,13 +69,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Advanced Image with Text](./previews/advanced-img-with-text.png)
-> ```
+> ![Advanced Image with Text](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Advanced-image-with-text.png?v=1779512646)
 
 **Description:** An enhanced image-with-text section with advanced layout controls including alignment, image position, and content styling options.
 
