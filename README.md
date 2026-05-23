@@ -2,6 +2,11 @@
 
 A curated collection of custom Shopify Liquid sections designed to enhance storefront UI with unique, reusable components. Each section is standalone and plug-and-play ready for any Shopify theme.
 
+## 👤 Author
+
+**Nazmul Islam** — [Md. Nazmul Islam Nayem](https://github.com/Nazmul246)
+**Jahangir Alam** — [Jahangir Alam](https://github.com/jahangiralom99)
+
 ---
 
 ## 📦 Sections Overview
@@ -396,12 +401,6 @@ To add real screenshots to the collapsible previews:
 ```markdown
 ![Section Name](./previews/filename.png)
 ```
-
----
-
-## 👤 Author
-
-**Nazmul246** — [Md. Nazmul Islam Nay...](https://github.com/Nazmul246)
 
 ---
 
