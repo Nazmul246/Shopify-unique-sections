@@ -274,10 +274,8 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 <summary>📸 Click to preview — <code>middle-image-benefit.liquid</code></summary>
 
 <br>
->
-> 
-> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0705/4678/4330/files/Hero-banner.png?v=1777449604)
-> 
+
+> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Middle-image-benefit.png?v=1779515639)
 
 **Description:** A combined section featuring a central product image, UGC video embed, and a benefits list — ideal for product landing pages.
 
