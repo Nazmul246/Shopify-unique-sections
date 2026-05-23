@@ -106,13 +106,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Advanced Variant Picker JW](./previews/advanced-variant-pickerJW.png)
-> ```
+> ![Advanced Variant Picker JW](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Advanced-variant-pickerJW.png?v=1779514123)
 
 **Description:** A JW-style variant picker with extended functionality for displaying and selecting product options with a refined UI.
 
