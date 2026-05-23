@@ -208,9 +208,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 >
 > Replace this block with your actual screenshot:
 >
-> ```
-> ![FAQ Section](./previews/faq-section.png)
-> ```
+> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0710/8204/9605/files/FAQ-image-liquid.png?v=1779511928)
 
 **Description:** An accordion-style FAQ section for answering common customer questions directly on product or landing pages.
 
