@@ -85,13 +85,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Advanced Variant Block](./previews/advanced-variant-block.png)
-> ```
+> ![Advanced Variant Block](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Advanced-variant-block.png?v=1779513282)
 
 **Description:** A custom variant display block that provides an enhanced UI for selecting product variants such as colors, sizes, or materials.
 
