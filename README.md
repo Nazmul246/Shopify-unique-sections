@@ -339,7 +339,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 > Replace this block with your actual screenshot:
 >
 > ```
-> ![image](https://cdn.shopify.com/s/files/1/0705/4678/4330/files/Hero-banner.png?v=1777449604)
+> ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0705/4678/4330/files/Hero-banner.png?v=1777449604)
 > ```
 
 **Description:** A combined section featuring a central product image, UGC video embed, and a benefits list — ideal for product landing pages.
