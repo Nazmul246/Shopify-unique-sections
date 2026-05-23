@@ -1,4 +1,4 @@
-# Shopify Unique Sections
+# <img src="https://cdn.shopify.com/s/files/1/0710/8204/9605/files/shopify.png?v=1778344209" width="35" height="35"> Shopify Unique Sections
 
 A curated collection of custom Shopify Liquid sections designed to enhance storefront UI with unique, reusable components. Each section is standalone and plug-and-play ready for any Shopify theme.
 
