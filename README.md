@@ -1,4 +1,4 @@
-# 🛍️ Shopify Unique Sections
+# Shopify Unique Sections
 
 A curated collection of custom Shopify Liquid sections designed to enhance storefront UI with unique, reusable components. Each section is standalone and plug-and-play ready for any Shopify theme.
 
