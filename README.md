@@ -333,8 +333,6 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 <summary>📸 Click to preview — <code>middle-image-benefit.liquid</code></summary>
 
 <br>
-
-> 🖼️ **Preview image coming soon**
 >
 > 
 > ![Middle Image Benefit](https://cdn.shopify.com/s/files/1/0705/4678/4330/files/Hero-banner.png?v=1777449604)
