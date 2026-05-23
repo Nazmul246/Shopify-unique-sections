@@ -212,13 +212,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Hero Gallery Slider](./previews/hero-gallery-slider.png)
-> ```
+> ![Hero Gallery Slider](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/delikate-hero-gallery-slider.png?v=1779514767)
 
 **Description:** A full-width hero section with a gallery slider, supporting multiple images with optional overlay text and CTAs.
 
@@ -239,13 +233,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Horizon Recently Viewed](./previews/horizon-recently-viewed.png)
-> ```
+> ![Horizon Recently Viewed](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Horizon-recently-viewed.png?v=1779515258)
 
 **Description:** A recently viewed products carousel that tracks and displays the last products a customer browsed, encouraging return visits.
 
@@ -266,13 +254,7 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![Middle Banner](./previews/middle-banner.png)
-> ```
+> ![Middle Banner](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Middle-banner_6ef2a846-3488-4017-8e74-e0e63484bcb5.png?v=1779515055)
 
 **Description:** A mid-page promotional banner designed to highlight sales, announcements, or featured collections between content sections.
 
