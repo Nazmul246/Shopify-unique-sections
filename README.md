@@ -42,13 +42,8 @@ A curated collection of custom Shopify Liquid sections designed to enhance store
 
 <br>
 
-> 🖼️ **Preview image coming soon**
->
-> Replace this block with your actual screenshot:
->
-> ```
-> ![About Story Section](./previews/about-story-section.png)
-> ```
+
+> ![About Story Section](https://cdn.shopify.com/s/files/1/0612/3621/5910/files/Advanced-image-with-text.png?v=1779512646)
 
 **Description:** A rich brand storytelling section that typically features a headline, narrative text, and supporting imagery. Great for "Our Story" or "About Us" pages.
 
